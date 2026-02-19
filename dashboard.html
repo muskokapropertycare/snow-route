@@ -73,10 +73,19 @@
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getDatabase,ref,onValue,remove}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 const firebaseConfig={apiKey:"AIzaSyDx5L68cyP4UbOnPLSeV8tuAzLg9znBtSE",authDomain:"snow-route-29bc5.firebaseapp.com",databaseURL:"https://snow-route-29bc5-default-rtdb.firebaseio.com",projectId:"snow-route-29bc5",storageBucket:"snow-route-29bc5.firebasestorage.app",messagingSenderId:"428738240151",appId:"1:428738240151:web:e71f764adaebe4ea73d3d2"};
-const PROPERTIES=[{id:"p1",order:1,name:"Johnson Residence",addr:"123 Maple St",lat:43.0731,lng:-76.1474},{id:"p2",order:2,name:"Smith Family",addr:"456 Oak Ave",lat:43.0750,lng:-76.1510},{id:"p3",order:3,name:"Miller Home",addr:"789 Pine Rd",lat:43.0768,lng:-76.1490},{id:"p4",order:4,name:"Davis Property",addr:"321 Elm Dr",lat:43.0720,lng:-76.1530},{id:"p5",order:5,name:"Wilson Driveway",addr:"654 Birch Lane",lat:43.0785,lng:-76.1455},{id:"p6",order:6,name:"Taylor House",addr:"987 Cedar Blvd",lat:43.0700,lng:-76.1460}];
+const PROPERTIES=[
+  {id:"p1",order:1,name:"Condos",addr:"120 Anglo St, Bracebridge ON",lat:45.035209,lng:-79.311519},
+  {id:"p2",order:2,name:"Elene",addr:"127 Milton St, Bracebridge ON",lat:45.033716,lng:-79.305076},
+  {id:"p3",order:3,name:"Verla",addr:"59 Santas Village Rd, Bracebridge ON",lat:45.023742,lng:-79.358715},
+  {id:"p4",order:4,name:"Lady 1",addr:"19 Gainsborough, Bracebridge ON",lat:45.031620,lng:-79.324650},
+  {id:"p5",order:5,name:"Joe",addr:"16 Gainsborough, Bracebridge ON",lat:45.031750,lng:-79.324750},
+  {id:"p6",order:6,name:"Lady 2",addr:"17 Gainsborough, Bracebridge ON",lat:45.031880,lng:-79.324850},
+  {id:"p7",order:7,name:"Hough",addr:"23 Gainsborough, Bracebridge ON",lat:45.032100,lng:-79.325050},
+  {id:"p8",order:8,name:"Anne Swan",addr:"1A MacArthur Dr, Bracebridge ON",lat:45.032074,lng:-79.328087},
+];
 const fbApp=initializeApp(firebaseConfig),db=getDatabase(fbApp);
 let map,propMarkers={},tractorMarkers={};
-map=L.map('map').setView([43.0750,-76.1490],15);
+map=L.map('map').setView([45.031, -79.320], 14);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
 onValue(ref(db,'route/properties'),snap=>{
   const data=snap.val()||{};
