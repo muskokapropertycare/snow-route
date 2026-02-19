@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-  <title>Snow Route - Operator</title>
-  <link rel="manifest" href="manifest.json"/>
-  <meta name="theme-color" content="#1565c0"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
-    #login-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;gap:14px;}
-    .app-logo{font-size:64px;line-height:1;}
-    .app-title{font-size:24px;font-weight:bold;color:#90caf9;}
-    .app-sub{font-size:14px;color:#78909c;margin-bottom:8px;}
-    .field{width:100%;max-width:340px;}
-    .field label{display:block;font-size:12px;color:#90caf9;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-    .field input{width:100%;padding:14px 16px;border-radius:12px;border:2px solid #1a3a6b;background:#0d2040;color:#fff;font-size:16px;outline:none;transition:border .2s;}
-    .field input:focus{border-color:#1565c0;}
-    #login-error{color:#ef5350;font-size:13px;min-height:16px;width:100%;max-width:340px;}
-    .btn{width:100%;max-width:340px;padding:15px;border-radius:12px;border:none;font-size:17px;font-weight:bold;cursor:pointer;}
-    .btn-blue{background:#1565c0;color:#fff;}
-    .btn-sm{padding:6px 13px;border-radius:8px;font-size:12px;width:auto;}
-    .btn-green{background:#2e7d32;color:#fff;}
-    .btn-gray{background:#37474f;color:#ccc;}
-    #app-screen{display:none;flex:1;flex-direction:column;overflow:hidden;}
-    #topbar{background:#1565c0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-    #topbar h1{font-size:17px;font-weight:bold;}
-    #topbar .right{display:flex;align-items:center;gap:8px;font-size:13px;}
-    #statusbar{background:#0d2040;padding:7px 14px;display:flex;justify-content:space-between;font-size:12px;color:#90caf9;flex-shrink:0;}
-    #map{flex:1;min-height:0;}
-    #prop-list{flex-shrink:0;height:230px;overflow-y:auto;background:#0d2040;border-top:2px solid #1565c0;}
-    .prop-item{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid #1a3a6b;gap:10px;}
-    .prop-item.done{opacity:.4;}
-    .stop-badge{flex-shrink:0;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;border:2px solid rgba(255,255,255,.3);}
-    .stop-badge.pending{background:#c62828;}
-    .stop-badge.done{background:#2e7d32;}
-    .prop-text{flex:1;min-width:0;}
-    .prop-name{font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .prop-addr{font-size:11px;color:#78909c;margin-top:2px;}
-    .prop-status{font-size:11px;font-weight:bold;flex-shrink:0;}
-    .prop-status.done{color:#66bb6a;}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Snow Route - Operator</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#1565c0"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+#login-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;gap:14px;}
+.app-logo{font-size:64px;line-height:1;}
+.app-title{font-size:24px;font-weight:bold;color:#90caf9;}
+.app-sub{font-size:14px;color:#78909c;margin-bottom:8px;}
+.field{width:100%;max-width:340px;}
+.field label{display:block;font-size:12px;color:#90caf9;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+.field input{width:100%;padding:14px 16px;border-radius:12px;border:2px solid #1a3a6b;background:#0d2040;color:#fff;font-size:16px;outline:none;transition:border .2s;}
+.field input:focus{border-color:#1565c0;}
+#login-error{color:#ef5350;font-size:13px;min-height:16px;width:100%;max-width:340px;}
+.btn{width:100%;max-width:340px;padding:15px;border-radius:12px;border:none;font-size:17px;font-weight:bold;cursor:pointer;}
+.btn-blue{background:#1565c0;color:#fff;}
+.btn-sm{padding:6px 13px;border-radius:8px;font-size:12px;width:auto;}
+.btn-green{background:#2e7d32;color:#fff;}
+.btn-gray{background:#37474f;color:#ccc;}
+#app-screen{display:none;flex:1;flex-direction:column;overflow:hidden;}
+#topbar{background:#1565c0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#topbar h1{font-size:17px;font-weight:bold;}
+#topbar .right{display:flex;align-items:center;gap:8px;font-size:13px;}
+#statusbar{background:#0d2040;padding:7px 14px;display:flex;justify-content:space-between;font-size:12px;color:#90caf9;flex-shrink:0;}
+#map{flex:1;min-height:0;}
+#prop-list{flex-shrink:0;height:230px;overflow-y:auto;background:#0d2040;border-top:2px solid #1565c0;}
+.prop-item{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid #1a3a6b;gap:10px;}
+.prop-item.done{opacity:.4;}
+.stop-badge{flex-shrink:0;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;border:2px solid rgba(255,255,255,.3);}
+.stop-badge.pending{background:#c62828;}
+.stop-badge.done{background:#2e7d32;}
+.prop-text{flex:1;min-width:0;}
+.prop-name{font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.prop-addr{font-size:11px;color:#78909c;margin-top:2px;}
+.prop-status{font-size:11px;font-weight:bold;flex-shrink:0;}
+.prop-status.done{color:#66bb6a;}
+</style>
 </head>
 <body>
 <div id="login-screen">
@@ -51,12 +51,12 @@
   <div class="field"><label>Email</label><input type="email" id="inp-email" placeholder="you@example.com" autocomplete="email"/></div>
   <div class="field"><label>Password</label><input type="password" id="inp-pass" placeholder="Password" autocomplete="current-password"/></div>
   <div id="login-error"></div>
-  <button class="btn btn-blue" onclick="doLogin()">Sign In</button>
+  <button class="btn btn-blue" id="signin-btn">Sign In</button>
 </div>
 <div id="app-screen">
   <div id="topbar">
     <h1>Snow Route</h1>
-    <div class="right"><span id="driver-label"></span><button class="btn btn-gray btn-sm" onclick="doLogout()">Sign Out</button></div>
+    <div class="right"><span id="driver-label"></span><button class="btn btn-gray btn-sm" id="signout-btn">Sign Out</button></div>
   </div>
   <div id="statusbar"><span id="prog-text">Loading...</span><span id="gps-text">Acquiring GPS...</span></div>
   <div id="map"></div>
@@ -67,7 +67,17 @@
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import{getDatabase,ref,onValue,update,set,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-const firebaseConfig={apiKey:"AIzaSyDx5L68cyP4UbOnPLSeV8tuAzLg9znBtSE",authDomain:"snow-route-29bc5.firebaseapp.com",databaseURL:"https://snow-route-29bc5-default-rtdb.firebaseio.com",projectId:"snow-route-29bc5",storageBucket:"snow-route-29bc5.firebasestorage.app",messagingSenderId:"428738240151",appId:"1:428738240151:web:e71f764adaebe4ea73d3d2"};
+
+const firebaseConfig={
+  apiKey:"AIzaSyDx5L68cyP4UbOnPLSeV8tuAzLg9znBtSE",
+  authDomain:"snow-route-29bc5.firebaseapp.com",
+  databaseURL:"https://snow-route-29bc5-default-rtdb.firebaseio.com",
+  projectId:"snow-route-29bc5",
+  storageBucket:"snow-route-29bc5.firebasestorage.app",
+  messagingSenderId:"428738240151",
+  appId:"1:428738240151:web:e71f764adaebe4ea73d3d2"
+};
+
 const PROPERTIES=[
   {id:"p1",order:1,name:"Condos",addr:"120 Anglo St, Bracebridge ON",lat:45.035209,lng:-79.311519},
   {id:"p2",order:2,name:"Elene",addr:"127 Milton St, Bracebridge ON",lat:45.033716,lng:-79.305076},
@@ -78,21 +88,161 @@ const PROPERTIES=[
   {id:"p7",order:7,name:"Hough",addr:"23 Gainsborough, Bracebridge ON",lat:45.032100,lng:-79.325050},
   {id:"p8",order:8,name:"Anne Swan",addr:"1A MacArthur Dr, Bracebridge ON",lat:45.032074,lng:-79.328087},
 ];
+
 const fbApp=initializeApp(firebaseConfig),auth=getAuth(fbApp),db=getDatabase(fbApp);
 let map,myDot,markers={},routeData={},gpsWatchId=null,currentUser=null;
-onAuthStateChanged(auth,user=>{if(user){currentUser=user;document.getElementById('login-screen').style.display='none';document.getElementById('app-screen').style.display='flex';document.getElementById('driver-label').textContent=user.email.split('@')[0];if(!map)initMap();listenRoute();startGPS();}else{currentUser=null;document.getElementById('login-screen').style.display='flex';document.getElementById('app-screen').style.display='none';if(gpsWatchId!==null){navigator.geolocation.clearWatch(gpsWatchId);gpsWatchId=null;}}});
-window.doLogin=async()=>{const email=document.getElementById('inp-email').value.trim(),pass=document.getElementById('inp-pass').value,errEl=document.getElementById('login-error');errEl.textContent='';if(!email||!pass){errEl.textContent='Please enter email and password.';return;}try{await signInWithEmailAndPassword(auth,email,pass);}catch(e){const msgs={'auth/invalid-credential':'Wrong email or password.','auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/invalid-email':'Invalid email.','auth/too-many-requests':'Too many attempts.'};errEl.textContent=msgs[e.code]||'Sign in failed.';}};
-window.doLogout=async()=>{if(confirm('Sign out?'))await signOut(auth);};
-document.getElementById('inp-pass').addEventListener('keydown',e=>{if(e.key==='Enter')window.doLogin();});
-function initMap(){map=L.map('map',{zoomControl:true}).setView([43.0750,-76.1490],15);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);}
-function listenRoute(){onValue(ref(db,'route/properties'),snap=>{routeData=snap.val()||{};renderMarkers();renderList();renderProgress();});}
-function isDone(id){return routeData[id]?.done===true;}
-function markerIcon(order,done){const bg=done?'#2e7d32':'#c62828';return L.divIcon({className:'',html:'<div style="background:'+bg+';width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:12px;">'+order+'</div>',iconSize:[30,30],iconAnchor:[15,15]});}
-function renderMarkers(){PROPERTIES.forEach(p=>{const done=isDone(p.id);if(markers[p.id])map.removeLayer(markers[p.id]);const m=L.marker([p.lat,p.lng],{icon:markerIcon(p.order,done)}).addTo(map).bindPopup('<b>#'+p.order+' - '+p.name+'</b><br>'+p.addr+'<br>'+(done?'Done':'Pending'));if(!done)m.on('click',()=>markDone(p.id));markers[p.id]=m;});}
-function renderList(){const el=document.getElementById('prop-list');el.innerHTML='';PROPERTIES.forEach(p=>{const done=isDone(p.id);const row=document.createElement('div');row.className='prop-item'+(done?' done':'');row.innerHTML='<div class="stop-badge '+(done?'done':'pending')+'">'+p.order+'</div><div class="prop-text"><div class="prop-name">'+p.name+'</div><div class="prop-addr">'+p.addr+'</div></div>'+(done?'<span class="prop-status done">DONE</span>':'<button class="btn btn-green btn-sm" onclick="markDone(''+p.id+'')">Done</button>');el.appendChild(row);});}
-function renderProgress(){const total=PROPERTIES.length,doneCount=PROPERTIES.filter(p=>isDone(p.id)).length;document.getElementById('prog-text').textContent=doneCount+' / '+total+' driveways complete';}
-window.markDone=async(id)=>{const p=PROPERTIES.find(x=>x.id===id);if(!p||isDone(id))return;if(!confirm('Mark Stop #'+p.order+' "'+p.name+'" as complete?'))return;await update(ref(db,'route/properties/'+id),{done:true,completedBy:currentUser?.email||'unknown',completedAt:serverTimestamp()});};
-function startGPS(){if(!navigator.geolocation){document.getElementById('gps-text').textContent='GPS unavailable';return;}const tractorIcon=L.divIcon({className:'',html:'<div style="background:#1565c0;width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 10px #1565c0;"></div>',iconSize:[22,22],iconAnchor:[11,11]});gpsWatchId=navigator.geolocation.watchPosition(pos=>{const{latitude:lat,longitude:lng}=pos.coords;document.getElementById('gps-text').textContent='GPS active';if(!myDot){myDot=L.marker([lat,lng],{icon:tractorIcon,zIndexOffset:1000}).addTo(map).bindPopup('You are here');}else{myDot.setLatLng([lat,lng]);}const uid=currentUser?.uid||'unknown';set(ref(db,'operators/'+uid),{email:currentUser?.email||'',lat,lng,updatedAt:serverTimestamp()});},()=>{document.getElementById('gps-text').textContent='GPS error';},{enableHighAccuracy:true,maximumAge:4000,timeout:10000});}
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    currentUser=user;
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app-screen').style.display='flex';
+    document.getElementById('driver-label').textContent=user.email.split('@')[0];
+    if(!map)initMap();
+    listenRoute();
+    startGPS();
+  }else{
+    currentUser=null;
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('app-screen').style.display='none';
+    if(gpsWatchId!==null){navigator.geolocation.clearWatch(gpsWatchId);gpsWatchId=null;}
+  }
+});
+
+async function doLogin(){
+  const email=document.getElementById('inp-email').value.trim();
+  const pass=document.getElementById('inp-pass').value;
+  const errEl=document.getElementById('login-error');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent='Please enter email and password.';return;}
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+  }catch(e){
+    const msgs={
+      'auth/invalid-credential':'Wrong email or password.',
+      'auth/user-not-found':'No account found.',
+      'auth/wrong-password':'Incorrect password.',
+      'auth/invalid-email':'Invalid email.',
+      'auth/too-many-requests':'Too many attempts.'
+    };
+    errEl.textContent=msgs[e.code]||'Sign in failed. ('+e.code+')';
+  }
+}
+
+document.getElementById('signin-btn').addEventListener('click',doLogin);
+document.getElementById('signout-btn').addEventListener('click',async()=>{if(confirm('Sign out?'))await signOut(auth);});
+document.getElementById('inp-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+function initMap(){
+  map=L.map('map',{zoomControl:true}).setView([45.031,-79.320],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(map);
+}
+
+function listenRoute(){
+  onValue(ref(db,'route/properties'),snap=>{
+    routeData=snap.val()||{};
+    renderMarkers();
+    renderList();
+    renderProgress();
+  });
+}
+
+function isDone(id){return routeData[id]&&routeData[id].done===true;}
+
+function markerIcon(order,done){
+  const bg=done?'#2e7d32':'#c62828';
+  return L.divIcon({
+    className:'',
+    html:'<div style="background:'+bg+';width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:12px;">'+order+'</div>',
+    iconSize:[30,30],
+    iconAnchor:[15,15]
+  });
+}
+
+function renderMarkers(){
+  PROPERTIES.forEach(p=>{
+    const done=isDone(p.id);
+    if(markers[p.id])map.removeLayer(markers[p.id]);
+    const m=L.marker([p.lat,p.lng],{icon:markerIcon(p.order,done)}).addTo(map)
+      .bindPopup('<b>#'+p.order+' - '+p.name+'</b><br>'+p.addr+'<br>'+(done?'Done':'Pending'));
+    if(!done)m.on('click',()=>markDone(p.id));
+    markers[p.id]=m;
+  });
+}
+
+function renderList(){
+  const el=document.getElementById('prop-list');
+  el.innerHTML='';
+  PROPERTIES.forEach(p=>{
+    const done=isDone(p.id);
+    const row=document.createElement('div');
+    row.className='prop-item'+(done?' done':'');
+    const badge=document.createElement('div');
+    badge.className='stop-badge '+(done?'done':'pending');
+    badge.textContent=p.order;
+    const text=document.createElement('div');
+    text.className='prop-text';
+    text.innerHTML='<div class="prop-name">'+p.name+'</div><div class="prop-addr">'+p.addr+'</div>';
+    row.appendChild(badge);
+    row.appendChild(text);
+    if(done){
+      const s=document.createElement('span');
+      s.className='prop-status done';
+      s.textContent='DONE';
+      row.appendChild(s);
+    }else{
+      const btn=document.createElement('button');
+      btn.className='btn btn-green btn-sm';
+      btn.textContent='Done';
+      btn.addEventListener('click',()=>markDone(p.id));
+      row.appendChild(btn);
+    }
+    el.appendChild(row);
+  });
+}
+
+function renderProgress(){
+  const total=PROPERTIES.length,doneCount=PROPERTIES.filter(p=>isDone(p.id)).length;
+  document.getElementById('prog-text').textContent=doneCount+' / '+total+' driveways complete';
+}
+
+async function markDone(id){
+  const p=PROPERTIES.find(x=>x.id===id);
+  if(!p||isDone(id))return;
+  if(!confirm('Mark Stop #'+p.order+' "'+p.name+'" as complete?'))return;
+  await update(ref(db,'route/properties/'+id),{
+    done:true,
+    completedBy:currentUser?currentUser.email:'unknown',
+    completedAt:serverTimestamp()
+  });
+}
+
+function startGPS(){
+  if(!navigator.geolocation){document.getElementById('gps-text').textContent='GPS unavailable';return;}
+  const tractorIcon=L.divIcon({
+    className:'',
+    html:'<div style="background:#1565c0;width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 10px #1565c0;"></div>',
+    iconSize:[22,22],
+    iconAnchor:[11,11]
+  });
+  gpsWatchId=navigator.geolocation.watchPosition(pos=>{
+    const{latitude:lat,longitude:lng}=pos.coords;
+    document.getElementById('gps-text').textContent='GPS active';
+    if(!myDot){
+      myDot=L.marker([lat,lng],{icon:tractorIcon,zIndexOffset:1000}).addTo(map).bindPopup('You are here');
+    }else{
+      myDot.setLatLng([lat,lng]);
+    }
+    const uid=currentUser?currentUser.uid:'unknown';
+    set(ref(db,'operators/'+uid),{
+      email:currentUser?currentUser.email:'',
+      lat,lng,
+      updatedAt:serverTimestamp()
+    });
+  },()=>{
+    document.getElementById('gps-text').textContent='GPS error';
+  },{enableHighAccuracy:true,maximumAge:4000,timeout:10000});
+}
 </script>
 </body>
 </html>
