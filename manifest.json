@@ -1,0 +1,18 @@
+{
+  "name": "Snow Route - Operator",
+  "short_name": "Snow Route",
+  "description": "Driveway snow blowing route tracker for operators",
+  "start_url": "/operator.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1628",
+  "theme_color": "#1565c0",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1163/1163586.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
