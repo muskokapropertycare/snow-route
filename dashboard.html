@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Snow Route - Manager Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh;}
+    #topbar{background:#1565c0;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+    #topbar h1{font-size:20px;font-weight:bold;}
+    .btn{padding:10px 18px;border-radius:10px;border:none;font-size:14px;font-weight:bold;cursor:pointer;}
+    .btn-red{background:#c62828;color:#fff;}
+    #stats{display:flex;flex-wrap:wrap;gap:10px;padding:14px 16px;background:#0d2040;}
+    .stat{flex:1;min-width:120px;background:#1a3a6b;border-radius:12px;padding:12px 16px;}
+    .stat-label{font-size:11px;color:#90caf9;text-transform:uppercase;letter-spacing:.5px;}
+    .stat-value{font-size:30px;font-weight:bold;margin-top:4px;}
+    .stat-value.green{color:#66bb6a;}
+    .stat-value.red{color:#ef5350;}
+    .stat-value.blue{color:#64b5f6;}
+    #pbar-wrap{padding:0 16px 12px;background:#0d2040;}
+    #pbar-bg{background:#1a3a6b;border-radius:10px;height:20px;overflow:hidden;}
+    #pbar-fill{background:linear-gradient(90deg,#1565c0,#2e7d32);height:100%;border-radius:10px;transition:width .6s ease;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;color:#fff;}
+    #map{height:340px;}
+    #tractors-section{padding:14px 16px;background:#0d2040;border-top:2px solid #1a3a6b;}
+    #tractors-section h2{font-size:13px;text-transform:uppercase;color:#90caf9;letter-spacing:.5px;margin-bottom:10px;}
+    .tractor-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1a3a6b;font-size:13px;}
+    .tractor-dot{width:12px;height:12px;border-radius:50%;background:#1565c0;flex-shrink:0;}
+    .tractor-name{font-weight:bold;}
+    .tractor-coords{font-size:11px;color:#78909c;margin-top:1px;}
+    #lists{display:flex;flex-wrap:wrap;}
+    .list-col{flex:1;min-width:280px;padding:14px 16px;}
+    .list-col h2{font-size:13px;text-transform:uppercase;color:#90caf9;letter-spacing:.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a3a6b;}
+    .prop-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #1a3a6b;}
+    .num-badge{flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;}
+    .num-badge.done{background:#2e7d32;}
+    .num-badge.pending{background:#c62828;}
+    .row-name{font-size:14px;font-weight:bold;}
+    .row-addr{font-size:11px;color:#78909c;margin-top:1px;}
+    .row-meta{font-size:11px;color:#78909c;margin-top:2px;}
+    #reset-section{padding:16px;background:#0a1628;text-align:center;border-top:2px solid #1a3a6b;}
+    #reset-section p{font-size:13px;color:#78909c;margin-bottom:10px;}
+  </style>
+</head>
+<body>
+<div id="topbar">
+  <h1>Snow Route - Manager Dashboard</h1>
+  <span id="last-updated" style="font-size:12px;color:#90caf9;"></span>
+</div>
+<div id="stats">
+  <div class="stat"><div class="stat-label">Route Progress</div><div class="stat-value blue" id="s-pct">0%</div></div>
+  <div class="stat"><div class="stat-label">Completed</div><div class="stat-value green" id="s-done">0</div></div>
+  <div class="stat"><div class="stat-label">Remaining</div><div class="stat-value red" id="s-left">0</div></div>
+  <div class="stat"><div class="stat-label">Active Drivers</div><div class="stat-value blue" id="s-drivers">0</div></div>
+</div>
+<div id="pbar-wrap"><div id="pbar-bg"><div id="pbar-fill" style="width:0%">0%</div></div></div>
+<div id="map"></div>
+<div id="tractors-section">
+  <h2>Live Tractor Positions</h2>
+  <div id="tractor-list"><div style="color:#78909c;font-size:13px;">Waiting for drivers to connect...</div></div>
+</div>
+<div id="lists">
+  <div class="list-col"><h2>Completed Driveways</h2><div id="done-list"></div></div>
+  <div class="list-col"><h2>Still To Do</h2><div id="todo-list"></div></div>
+</div>
+<div id="reset-section">
+  <p>Use the reset button at the start of each new storm to clear all completed statuses.</p>
+  <button class="btn btn-red" onclick="resetRoute()">Reset Route for New Storm</button>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getDatabase,ref,onValue,remove}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+const firebaseConfig={apiKey:"AIzaSyDx5L68cyP4UbOnPLSeV8tuAzLg9znBtSE",authDomain:"snow-route-29bc5.firebaseapp.com",databaseURL:"https://snow-route-29bc5-default-rtdb.firebaseio.com",projectId:"snow-route-29bc5",storageBucket:"snow-route-29bc5.firebasestorage.app",messagingSenderId:"428738240151",appId:"1:428738240151:web:e71f764adaebe4ea73d3d2"};
+const PROPERTIES=[{id:"p1",order:1,name:"Johnson Residence",addr:"123 Maple St",lat:43.0731,lng:-76.1474},{id:"p2",order:2,name:"Smith Family",addr:"456 Oak Ave",lat:43.0750,lng:-76.1510},{id:"p3",order:3,name:"Miller Home",addr:"789 Pine Rd",lat:43.0768,lng:-76.1490},{id:"p4",order:4,name:"Davis Property",addr:"321 Elm Dr",lat:43.0720,lng:-76.1530},{id:"p5",order:5,name:"Wilson Driveway",addr:"654 Birch Lane",lat:43.0785,lng:-76.1455},{id:"p6",order:6,name:"Taylor House",addr:"987 Cedar Blvd",lat:43.0700,lng:-76.1460}];
+const fbApp=initializeApp(firebaseConfig),db=getDatabase(fbApp);
+let map,propMarkers={},tractorMarkers={};
+map=L.map('map').setView([43.0750,-76.1490],15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+onValue(ref(db,'route/properties'),snap=>{
+  const data=snap.val()||{};
+  const done=PROPERTIES.filter(p=>data[p.id]?.done===true);
+  const todo=PROPERTIES.filter(p=>!data[p.id]?.done);
+  const pct=PROPERTIES.length?Math.round(done.length/PROPERTIES.length*100):0;
+  document.getElementById('s-pct').textContent=pct+'%';
+  document.getElementById('s-done').textContent=done.length;
+  document.getElementById('s-left').textContent=todo.length;
+  document.getElementById('pbar-fill').style.width=pct+'%';
+  document.getElementById('pbar-fill').textContent=pct+'%';
+  document.getElementById('last-updated').textContent='Updated: '+new Date().toLocaleTimeString();
+  document.getElementById('done-list').innerHTML=done.length===0?'<div style="color:#78909c;font-size:13px;padding:8px 0;">None yet</div>':done.map(p=>'<div class="prop-row"><div class="num-badge done">'+p.order+'</div><div><div class="row-name">'+p.name+'</div><div class="row-addr">'+p.addr+'</div><div class="row-meta">by '+(data[p.id]?.completedBy||'unknown')+'</div></div></div>').join('');
+  document.getElementById('todo-list').innerHTML=todo.length===0?'<div style="color:#66bb6a;font-size:13px;padding:8px 0;">All driveways complete!</div>':todo.map(p=>'<div class="prop-row"><div class="num-badge pending">'+p.order+'</div><div><div class="row-name">'+p.name+'</div><div class="row-addr">'+p.addr+'</div></div></div>').join('');
+  PROPERTIES.forEach(p=>{const finished=data[p.id]?.done===true;const color=finished?'#2e7d32':'#c62828';if(propMarkers[p.id])map.removeLayer(propMarkers[p.id]);const icon=L.divIcon({className:'',html:'<div style="background:'+color+';width:28px;height:28px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:12px;">'+p.order+'</div>',iconSize:[28,28],iconAnchor:[14,14]});propMarkers[p.id]=L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup('<b>#'+p.order+' - '+p.name+'</b><br>'+p.addr+'<br>'+(finished?'Done':'Pending'));});
+});
+onValue(ref(db,'operators'),snap=>{
+  const ops=snap.val()||{};const active=Object.entries(ops);
+  document.getElementById('s-drivers').textContent=active.length;
+  document.getElementById('tractor-list').innerHTML=active.length===0?'<div style="color:#78909c;font-size:13px;">No drivers active</div>':active.map(([uid,v])=>'<div class="tractor-row"><div class="tractor-dot"></div><div><div class="tractor-name">'+( v.email?.split('@')[0]||uid)+'</div><div class="tractor-coords">'+(v.lat?.toFixed(5)||'?')+', '+(v.lng?.toFixed(5)||'?')+'</div></div></div>').join('');
+  const activeIds=new Set(active.map(([id])=>id));
+  Object.keys(tractorMarkers).forEach(id=>{if(!activeIds.has(id)){map.removeLayer(tractorMarkers[id]);delete tractorMarkers[id];}});
+  active.forEach(([uid,v])=>{if(!v.lat)return;const name=v.email?.split('@')[0]||uid;const icon=L.divIcon({className:'',html:'<div style="background:#1565c0;width:32px;height:32px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 12px #1565c0;display:flex;align-items:center;justify-content:center;font-size:16px;">T</div>',iconSize:[32,32],iconAnchor:[16,16]});if(tractorMarkers[uid]){tractorMarkers[uid].setLatLng([v.lat,v.lng]);}else{tractorMarkers[uid]=L.marker([v.lat,v.lng],{icon,zIndexOffset:1000}).addTo(map).bindPopup(name);}});
+});
+window.resetRoute=async()=>{const confirmed=confirm('RESET ROUTE FOR NEW STORM?\n\nThis will clear ALL completed driveways and reset every stop back to pending (red).\n\nThis cannot be undone. Continue?');if(!confirmed)return;await remove(ref(db,'route/properties'));alert('Route has been reset! All stops are now pending.');};
+</script>
+</body>
+</html>
