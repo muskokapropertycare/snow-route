@@ -8,7 +8,6 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh;}
-    /* LOGIN SCREEN */
     #login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:#0a1628;}
     .login-box{background:#0d2040;border-radius:16px;padding:36px 32px;width:100%;max-width:380px;border:1px solid #1a3a6b;}
     .login-logo{font-size:48px;text-align:center;margin-bottom:8px;}
@@ -22,7 +21,6 @@
     .btn{width:100%;padding:14px;border-radius:10px;border:none;font-size:16px;font-weight:bold;cursor:pointer;transition:background .2s;}
     .btn-blue{background:#1565c0;color:#fff;}
     .btn-blue:hover{background:#1976d2;}
-    /* APP SCREEN */
     #app-screen{display:none;flex-direction:column;min-height:100vh;}
     #topbar{background:#1565c0;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
     #topbar h1{font-size:17px;font-weight:bold;}
@@ -31,11 +29,9 @@
     .btn-sm{padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:bold;cursor:pointer;}
     .btn-gray{background:#37474f;color:#ccc;}
     .btn-red{background:#c62828;color:#fff;}
-    /* NAV TABS */
     #nav-tabs{display:flex;background:#0d2040;border-bottom:2px solid #1a3a6b;}
     .nav-tab{padding:12px 20px;font-size:13px;font-weight:bold;cursor:pointer;color:#78909c;border-bottom:3px solid transparent;transition:all .2s;}
     .nav-tab.active{color:#90caf9;border-bottom-color:#1565c0;}
-    /* DASHBOARD TAB */
     #tab-dashboard{display:block;}
     #stats{display:flex;flex-wrap:wrap;gap:10px;padding:14px 16px;background:#0d2040;}
     .stat{flex:1;min-width:120px;background:#1a3a6b;border-radius:12px;padding:12px 16px;}
@@ -60,7 +56,6 @@
     .list-num.done{background:#2e7d32;}
     .list-num.todo{background:#c62828;}
     #reset-section{padding:14px 16px;background:#0a1628;border-top:2px solid #1a3a6b;}
-    /* MANAGE CLIENTS TAB */
     #tab-clients{display:none;padding:16px;}
     .section-title{font-size:16px;font-weight:bold;color:#90caf9;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #1a3a6b;}
     .add-client-form{background:#0d2040;border-radius:12px;padding:16px;margin-bottom:20px;border:1px solid #1a3a6b;}
@@ -75,8 +70,6 @@
     #form-msg{font-size:13px;min-height:18px;margin-top:8px;}
     .form-msg-ok{color:#66bb6a;}
     .form-msg-err{color:#ef5350;}
-    .client-list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-    .client-count{font-size:13px;color:#78909c;}
     #client-table{width:100%;border-collapse:collapse;}
     #client-table th{text-align:left;font-size:11px;color:#90caf9;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:2px solid #1a3a6b;}
     #client-table td{padding:9px 10px;border-bottom:1px solid #1a3a6b;font-size:13px;vertical-align:middle;}
@@ -90,42 +83,36 @@
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">❄️</div>
+    <div class="login-logo">&#10052;</div>
     <div class="login-title">Snow Route</div>
-    <div class="login-sub">Manager Dashboard — Sign In</div>
+    <div class="login-sub">Manager Dashboard &mdash; Sign In</div>
     <div class="field">
       <label>Email</label>
-      <input type="email" id="login-email" placeholder="manager@example.com" autocomplete="email"/>
+      <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email"/>
     </div>
     <div class="field">
       <label>Password</label>
       <input type="password" id="login-password" placeholder="Password" autocomplete="current-password"/>
     </div>
     <div id="login-error"></div>
-    <button class="btn btn-blue" onclick="doLogin()">Sign In</button>
+    <button class="btn btn-blue" id="login-btn">Sign In</button>
   </div>
 </div>
 
-<!-- APP SCREEN -->
 <div id="app-screen">
   <div id="topbar">
-    <h1>❄️ Snow Route — Manager Dashboard</h1>
+    <h1>&#10052; Snow Route &mdash; Manager Dashboard</h1>
     <div class="topbar-right">
       <span id="last-updated"></span>
-      <button class="btn-sm btn-gray" onclick="doSignOut()">Sign Out</button>
+      <button class="btn-sm btn-gray" id="signout-btn">Sign Out</button>
     </div>
   </div>
-
-  <!-- NAV TABS -->
   <div id="nav-tabs">
-    <div class="nav-tab active" id="tab-btn-dashboard" onclick="switchTab('dashboard')">📊 Live Dashboard</div>
-    <div class="nav-tab" id="tab-btn-clients" onclick="switchTab('clients')">📋 Manage Clients</div>
+    <div class="nav-tab active" id="tab-btn-dashboard">&#128202; Live Dashboard</div>
+    <div class="nav-tab" id="tab-btn-clients">&#128203; Manage Clients</div>
   </div>
-
-  <!-- DASHBOARD TAB -->
   <div id="tab-dashboard">
     <div id="stats">
       <div class="stat"><div class="stat-label">Route Progress</div><div class="stat-value blue" id="s-pct">0%</div></div>
@@ -152,13 +139,11 @@
       </div>
     </div>
     <div id="reset-section">
-      <button class="btn btn-red" style="max-width:200px;" onclick="confirmReset()">Reset All Progress</button>
+      <button class="btn btn-red" style="max-width:200px;" id="reset-btn">Reset All Progress</button>
     </div>
   </div>
-
-  <!-- MANAGE CLIENTS TAB -->
   <div id="tab-clients">
-    <div class="section-title">➕ Add New Client</div>
+    <div class="section-title">Add New Client</div>
     <div class="add-client-form">
       <div class="form-row">
         <div class="form-field">
@@ -181,25 +166,16 @@
         </div>
         <div class="form-field">
           <label>Route Order</label>
-          <input type="number" id="new-order" placeholder="e.g. 59 (auto if blank)"/>
+          <input type="number" id="new-order" placeholder="Auto if blank"/>
         </div>
       </div>
-      <button class="btn-add btn-green" onclick="addClient()">➕ Add Client to Route</button>
+      <button class="btn-add btn-green" id="add-btn">Add Client to Route</button>
       <div id="form-msg"></div>
     </div>
-
-    <div class="section-title">👥 Current Clients (<span id="client-count">0</span>)</div>
-    <input type="text" id="search-clients" placeholder="🔍 Search clients by name or address..." oninput="renderClientTable()"/>
+    <div class="section-title">Current Clients (<span id="client-count">0</span>)</div>
+    <input type="text" id="search-clients" placeholder="Search clients by name or address..."/>
     <table id="client-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Address</th>
-          <th>Coords</th>
-          <th>Action</th>
-        </tr>
-      </thead>
+      <thead><tr><th>#</th><th>Name</th><th>Address</th><th>Coords</th><th>Action</th></tr></thead>
       <tbody id="client-tbody"></tbody>
     </table>
   </div>
@@ -207,7 +183,7 @@
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getDatabase,ref,onValue,remove,set,push,get}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import{getDatabase,ref,onValue,remove,set,get}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig={apiKey:"AIzaSyDx5L68cyP4UbOnPLSeV8tuAzLg9znBtSE",authDomain:"snow-route-29bc5.firebaseapp.com",databaseURL:"https://snow-route-29bc5-default-rtdb.firebaseio.com",projectId:"snow-route-29bc5",storageBucket:"snow-route-29bc5.firebasestorage.app",messagingSenderId:"428738240151",appId:"1:428738240151:web:e71f764adaebe4ea73d3d2"};
@@ -216,7 +192,6 @@ const fbApp=initializeApp(firebaseConfig);
 const db=getDatabase(fbApp);
 const auth=getAuth(fbApp);
 
-// ── DEFAULT PROPERTIES (used as fallback) ──────────────────────────
 const DEFAULT_PROPERTIES=[
 {id:"p1",order:1,name:"Mini Storage",addr:"1711 Winhara Rd, Bracebridge ON",lat:44.992892,lng:-79.309460},
 {id:"p2",order:2,name:"Flo",addr:"5 Memory Lane, Bracebridge ON",lat:45.010375,lng:-79.305802},
@@ -281,198 +256,195 @@ const DEFAULT_PROPERTIES=[
 let PROPERTIES=[...DEFAULT_PROPERTIES];
 let map,initialized=false;
 
-// ── AUTH ───────────────────────────────────────────────────────────
-window.doLogin=async function(){
-  const email=document.getElementById('login-email').value.trim();
-  const pwd=document.getElementById('login-password').value;
-  const errEl=document.getElementById('login-error');
-  errEl.textContent='Signing in...';
+// AUTH
+document.getElementById("login-btn").addEventListener("click",doLogin);
+document.getElementById("login-password").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
+document.getElementById("login-email").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
+document.getElementById("signout-btn").addEventListener("click",function(){signOut(auth);});
+document.getElementById("reset-btn").addEventListener("click",confirmReset);
+document.getElementById("add-btn").addEventListener("click",addClient);
+document.getElementById("search-clients").addEventListener("input",renderClientTable);
+document.getElementById("tab-btn-dashboard").addEventListener("click",function(){switchTab("dashboard");});
+document.getElementById("tab-btn-clients").addEventListener("click",function(){switchTab("clients");});
+
+async function doLogin(){
+  var email=document.getElementById("login-email").value.trim();
+  var pwd=document.getElementById("login-password").value;
+  var errEl=document.getElementById("login-error");
+  errEl.textContent="Signing in...";
   try{
     await signInWithEmailAndPassword(auth,email,pwd);
-    errEl.textContent='';
+    errEl.textContent="";
   }catch(e){
-    errEl.textContent='Invalid email or password. Please try again.';
+    errEl.textContent="Invalid email or password. Please try again.";
   }
-};
+}
 
-window.doSignOut=async function(){
-  await signOut(auth);
-};
-
-onAuthStateChanged(auth,user=>{
+onAuthStateChanged(auth,function(user){
   if(user){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app-screen').style.display='flex';
+    document.getElementById("login-screen").style.display="none";
+    document.getElementById("app-screen").style.display="flex";
     if(!initialized){initialized=true;initApp();}
   }else{
-    document.getElementById('login-screen').style.display='flex';
-    document.getElementById('app-screen').style.display='none';
+    document.getElementById("login-screen").style.display="flex";
+    document.getElementById("app-screen").style.display="none";
   }
 });
 
-// Allow Enter key on login
-document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')window.doLogin();});
-document.getElementById('login-email').addEventListener('keydown',e=>{if(e.key==='Enter')window.doLogin();});
+function switchTab(tab){
+  document.getElementById("tab-dashboard").style.display=tab==="dashboard"?"block":"none";
+  document.getElementById("tab-clients").style.display=tab==="clients"?"block":"none";
+  document.getElementById("tab-btn-dashboard").className="nav-tab"+(tab==="dashboard"?" active":"");
+  document.getElementById("tab-btn-clients").className="nav-tab"+(tab==="clients"?" active":"");
+  if(tab==="clients")renderClientTable();
+}
 
-// ── TAB NAVIGATION ─────────────────────────────────────────────────
-window.switchTab=function(tab){
-  document.getElementById('tab-dashboard').style.display=tab==='dashboard'?'block':'none';
-  document.getElementById('tab-clients').style.display=tab==='clients'?'block':'none';
-  document.getElementById('tab-btn-dashboard').className='nav-tab'+(tab==='dashboard'?' active':'');
-  document.getElementById('tab-btn-clients').className='nav-tab'+(tab==='clients'?' active':'');
-  if(tab==='clients')renderClientTable();
-};
-
-// ── INIT APP ────────────────────────────────────────────────────────
 function initApp(){
-  // Init map
-  map=L.map('map').setView([45.035,-79.315],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
-
-  // Load custom properties from Firebase if they exist
-  get(ref(db,'properties')).then(snap=>{
+  map=L.map("map").setView([45.035,-79.315],13);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OpenStreetMap"}).addTo(map);
+  get(ref(db,"properties")).then(function(snap){
     if(snap.exists()){
-      const data=snap.val();
-      PROPERTIES=Object.values(data).sort((a,b)=>a.order-b.order);
+      PROPERTIES=Object.values(snap.val()).sort(function(a,b){return a.order-b.order;});
     }
     startListening();
-  }).catch(()=>startListening());
+  }).catch(function(){startListening();});
 }
 
 function startListening(){
-  // Add property markers to map
-  PROPERTIES.forEach(p=>{
-    const icon=L.divIcon({className:'',html:'<div style="background:#c62828;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;border:2px solid #fff;">'+p.order+'</div>',iconSize:[26,26],iconAnchor:[13,13]});
-    L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup('<b>'+p.order+'. '+p.name+'</b><br/>'+p.addr);
+  PROPERTIES.forEach(function(p){
+    var icon=L.divIcon({className:"",html:"<div style='background:#c62828;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;border:2px solid #fff;'>"+p.order+"</div>",iconSize:[26,26],iconAnchor:[13,13]});
+    L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup("<b>"+p.order+". "+p.name+"</b><br/>"+p.addr);
   });
-
-  // Listen to completions
-  onValue(ref(db,'completed'),snap=>{
-    const data=snap.val()||{};
-    const done=new Set(Object.keys(data));
-    const total=PROPERTIES.length;
-    const doneCount=PROPERTIES.filter(p=>done.has(p.id)).length;
-    const pct=total>0?Math.round(doneCount/total*100):0;
-    document.getElementById('s-pct').textContent=pct+'%';
-    document.getElementById('s-done').textContent=doneCount;
-    document.getElementById('s-left').textContent=total-doneCount;
-    const fill=document.getElementById('pbar-fill');
-    fill.style.width=pct+'%';
-    fill.textContent=pct+'%';
-    document.getElementById('last-updated').textContent='Updated: '+new Date().toLocaleTimeString();
-
-    // Render done/todo lists
-    const doneList=document.getElementById('done-list');
-    const todoList=document.getElementById('todo-list');
-    doneList.innerHTML='';todoList.innerHTML='';
-    PROPERTIES.forEach(p=>{
-      const isDone=done.has(p.id);
-      const by=data[p.id]?'by '+data[p.id].operator:'';
-      const div=document.createElement('div');
-      div.className='list-item';
-      div.innerHTML='<div class="list-num '+(isDone?'done':'todo')+'">'+p.order+'</div><div><b>'+p.name+'</b><br/><span style="color:#78909c;font-size:11px;">'+p.addr+'</span>'+(by?'<br/><span style="color:#64b5f6;font-size:11px;">'+by+'</span>':'')+'</div>';
+  onValue(ref(db,"completed"),function(snap){
+    var data=snap.val()||{};
+    var done=new Set(Object.keys(data));
+    var total=PROPERTIES.length;
+    var doneCount=PROPERTIES.filter(function(p){return done.has(p.id);}).length;
+    var pct=total>0?Math.round(doneCount/total*100):0;
+    document.getElementById("s-pct").textContent=pct+"%";
+    document.getElementById("s-done").textContent=doneCount;
+    document.getElementById("s-left").textContent=total-doneCount;
+    var fill=document.getElementById("pbar-fill");
+    fill.style.width=pct+"%";
+    fill.textContent=pct+"%";
+    document.getElementById("last-updated").textContent="Updated: "+new Date().toLocaleTimeString();
+    var doneList=document.getElementById("done-list");
+    var todoList=document.getElementById("todo-list");
+    doneList.innerHTML="";todoList.innerHTML="";
+    PROPERTIES.forEach(function(p){
+      var isDone=done.has(p.id);
+      var by=data[p.id]?"by "+data[p.id].operator:"";
+      var div=document.createElement("div");
+      div.className="list-item";
+      var byHtml=by?"<br/><span style='color:#64b5f6;font-size:11px;'>"+by+"</span>":"";
+      div.innerHTML="<div class='list-num "+(isDone?"done":"todo")+"'>"+p.order+"</div><div><b>"+p.name+"</b><br/><span style='color:#78909c;font-size:11px;'>"+p.addr+"</span>"+byHtml+"</div>";
       (isDone?doneList:todoList).appendChild(div);
     });
   });
-
-  // Listen to operator positions
-  onValue(ref(db,'operators'),snap=>{
-    const ops=snap.val()||{};
-    const active=Object.entries(ops).filter(([,v])=>v.lat&&v.lng);
-    document.getElementById('s-drivers').textContent=active.length;
-    const tList=document.getElementById('tractor-list');
-    tList.innerHTML='';
-    active.forEach(([name,v])=>{
-      const d=document.createElement('div');
-      d.className='tractor-row';
-      d.innerHTML='<div class="tractor-dot"></div><div><div class="tractor-name">'+name+'</div><div style="color:#78909c;font-size:11px;">'+v.lat.toFixed(5)+', '+v.lng.toFixed(5)+'</div></div>';
+  onValue(ref(db,"operators"),function(snap){
+    var ops=snap.val()||{};
+    var active=Object.entries(ops).filter(function(e){return e[1].lat&&e[1].lng;});
+    document.getElementById("s-drivers").textContent=active.length;
+    var tList=document.getElementById("tractor-list");
+    tList.innerHTML="";
+    active.forEach(function(e){
+      var name=e[0];var v=e[1];
+      var d=document.createElement("div");
+      d.className="tractor-row";
+      d.innerHTML="<div class='tractor-dot'></div><div><div class='tractor-name'>"+name+"</div><div style='color:#78909c;font-size:11px;'>"+v.lat.toFixed(5)+", "+v.lng.toFixed(5)+"</div></div>";
       tList.appendChild(d);
     });
   });
 }
 
-// ── RESET ───────────────────────────────────────────────────────────
-window.confirmReset=function(){
-  if(confirm('Reset ALL completed driveways? This cannot be undone.')){
-    remove(ref(db,'completed'));
+function confirmReset(){
+  if(confirm("Reset ALL completed driveways? This cannot be undone.")){
+    remove(ref(db,"completed"));
   }
-};
+}
 
-// ── MANAGE CLIENTS ─────────────────────────────────────────────────
-window.addClient=async function(){
-  const name=document.getElementById('new-name').value.trim();
-  const addr=document.getElementById('new-addr').value.trim();
-  const lat=parseFloat(document.getElementById('new-lat').value);
-  const lng=parseFloat(document.getElementById('new-lng').value);
-  const orderInput=document.getElementById('new-order').value;
-  const msgEl=document.getElementById('form-msg');
-
+async function addClient(){
+  var name=document.getElementById("new-name").value.trim();
+  var addr=document.getElementById("new-addr").value.trim();
+  var lat=parseFloat(document.getElementById("new-lat").value);
+  var lng=parseFloat(document.getElementById("new-lng").value);
+  var orderInput=document.getElementById("new-order").value;
+  var msgEl=document.getElementById("form-msg");
   if(!name||!addr||isNaN(lat)||isNaN(lng)){
-    msgEl.textContent='Please fill in Name, Address, Latitude, and Longitude.';
-    msgEl.className='form-msg-err';
+    msgEl.textContent="Please fill in Name, Address, Latitude, and Longitude.";
+    msgEl.className="form-msg-err";
     return;
   }
-
-  const maxOrder=PROPERTIES.reduce((m,p)=>Math.max(m,p.order),0);
-  const order=orderInput&&!isNaN(parseInt(orderInput))?parseInt(orderInput):maxOrder+1;
-  const id='p'+(Date.now());
-  const newProp={id,order,name,addr,lat,lng};
-
-  PROPERTIES.push(newProp);
-  PROPERTIES.sort((a,b)=>a.order-b.order);
-
-  // Rebuild properties object for Firebase
-  const propsObj={};
-  PROPERTIES.forEach(p=>{propsObj[p.id]=p;});
-
+  var maxOrder=PROPERTIES.reduce(function(m,p){return Math.max(m,p.order);},0);
+  var order=orderInput&&!isNaN(parseInt(orderInput))?parseInt(orderInput):maxOrder+1;
+  var id="p"+Date.now();
+  PROPERTIES.push({id:id,order:order,name:name,addr:addr,lat:lat,lng:lng});
+  PROPERTIES.sort(function(a,b){return a.order-b.order;});
+  var propsObj={};
+  PROPERTIES.forEach(function(p){propsObj[p.id]=p;});
   try{
-    await set(ref(db,'properties'),propsObj);
-    msgEl.textContent='✅ '+name+' added to route at position #'+order;
-    msgEl.className='form-msg-ok';
-    document.getElementById('new-name').value='';
-    document.getElementById('new-addr').value='';
-    document.getElementById('new-lat').value='';
-    document.getElementById('new-lng').value='';
-    document.getElementById('new-order').value='';
+    await set(ref(db,"properties"),propsObj);
+    msgEl.textContent="Added "+name+" to route at position #"+order;
+    msgEl.className="form-msg-ok";
+    document.getElementById("new-name").value="";
+    document.getElementById("new-addr").value="";
+    document.getElementById("new-lat").value="";
+    document.getElementById("new-lng").value="";
+    document.getElementById("new-order").value="";
     renderClientTable();
   }catch(e){
-    msgEl.textContent='Error saving: '+e.message;
-    msgEl.className='form-msg-err';
+    msgEl.textContent="Error saving: "+e.message;
+    msgEl.className="form-msg-err";
   }
-};
+}
 
-window.removeClient=async function(id){
-  const prop=PROPERTIES.find(p=>p.id===id);
-  if(!prop)return;
-  if(!confirm('Remove "'+prop.name+'" ('+prop.addr+') from the route?'))return;
-
-  PROPERTIES=PROPERTIES.filter(p=>p.id!==id);
-  const propsObj={};
-  PROPERTIES.forEach(p=>{propsObj[p.id]=p;});
-
-  try{
-    await set(ref(db,'properties'),propsObj);
-    // Also remove from completed if present
-    remove(ref(db,'completed/'+id));
-    renderClientTable();
-    document.getElementById('client-count').textContent=PROPERTIES.length;
-  }catch(e){
-    alert('Error removing client: '+e.message);
-  }
-};
-
-window.renderClientTable=function(){
-  const q=(document.getElementById('search-clients').value||'').toLowerCase();
-  const filtered=PROPERTIES.filter(p=>p.name.toLowerCase().includes(q)||p.addr.toLowerCase().includes(q));
-  document.getElementById('client-count').textContent=PROPERTIES.length;
-  const tbody=document.getElementById('client-tbody');
-  tbody.innerHTML='';
-  filtered.sort((a,b)=>a.order-b.order).forEach(p=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML='<td><span class="order-badge">#'+p.order+'</span></td><td><b>'+p.name+'</b></td><td style="color:#90caf9;">'+p.addr+'</td><td style="color:#78909c;font-size:11px;">'+p.lat.toFixed(5)+', '+p.lng.toFixed(5)+'</td><td><button class="remove-btn" onclick="removeClient(''+p.id+'')">Remove</button></td>';
+function renderClientTable(){
+  var q=(document.getElementById("search-clients").value||"").toLowerCase();
+  var filtered=PROPERTIES.filter(function(p){return p.name.toLowerCase().indexOf(q)>=0||p.addr.toLowerCase().indexOf(q)>=0;});
+  document.getElementById("client-count").textContent=PROPERTIES.length;
+  var tbody=document.getElementById("client-tbody");
+  tbody.innerHTML="";
+  filtered.sort(function(a,b){return a.order-b.order;}).forEach(function(p){
+    var tr=document.createElement("tr");
+    var td1=document.createElement("td");
+    td1.innerHTML="<span class='order-badge'>#"+p.order+"</span>";
+    var td2=document.createElement("td");
+    td2.innerHTML="<b>"+p.name+"</b>";
+    var td3=document.createElement("td");
+    td3.style.color="#90caf9";
+    td3.textContent=p.addr;
+    var td4=document.createElement("td");
+    td4.style.color="#78909c";
+    td4.style.fontSize="11px";
+    td4.textContent=p.lat.toFixed(5)+", "+p.lng.toFixed(5);
+    var td5=document.createElement("td");
+    var btn=document.createElement("button");
+    btn.className="remove-btn";
+    btn.textContent="Remove";
+    btn.dataset.id=p.id;
+    btn.addEventListener("click",handleRemove);
+    td5.appendChild(btn);
+    tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(td4);tr.appendChild(td5);
     tbody.appendChild(tr);
   });
-};
+}
+
+async function handleRemove(e){
+  var id=e.currentTarget.dataset.id;
+  var prop=PROPERTIES.find(function(p){return p.id===id;});
+  if(!prop)return;
+  if(!confirm("Remove "+prop.name+" ("+prop.addr+") from the route?"))return;
+  PROPERTIES=PROPERTIES.filter(function(p){return p.id!==id;});
+  var propsObj={};
+  PROPERTIES.forEach(function(p){propsObj[p.id]=p;});
+  try{
+    await set(ref(db,"properties"),propsObj);
+    remove(ref(db,"completed/"+id));
+    renderClientTable();
+  }catch(e2){
+    alert("Error removing client: "+e2.message);
+  }
+}
 </script>
 </body>
 </html>
