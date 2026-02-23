@@ -8,10 +8,35 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh;}
-    #topbar{background:#1565c0;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-    #topbar h1{font-size:20px;font-weight:bold;}
-    .btn{padding:10px 18px;border-radius:10px;border:none;font-size:14px;font-weight:bold;cursor:pointer;}
+    /* LOGIN SCREEN */
+    #login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:#0a1628;}
+    .login-box{background:#0d2040;border-radius:16px;padding:36px 32px;width:100%;max-width:380px;border:1px solid #1a3a6b;}
+    .login-logo{font-size:48px;text-align:center;margin-bottom:8px;}
+    .login-title{font-size:22px;font-weight:bold;text-align:center;color:#90caf9;margin-bottom:4px;}
+    .login-sub{font-size:13px;text-align:center;color:#78909c;margin-bottom:24px;}
+    .field{margin-bottom:16px;}
+    .field label{display:block;font-size:12px;color:#90caf9;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+    .field input{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #1a3a6b;background:#0a1628;color:#fff;font-size:15px;outline:none;transition:border-color .2s;}
+    .field input:focus{border-color:#1565c0;}
+    #login-error{color:#ef5350;font-size:13px;min-height:18px;margin-bottom:10px;}
+    .btn{width:100%;padding:14px;border-radius:10px;border:none;font-size:16px;font-weight:bold;cursor:pointer;transition:background .2s;}
+    .btn-blue{background:#1565c0;color:#fff;}
+    .btn-blue:hover{background:#1976d2;}
+    /* APP SCREEN */
+    #app-screen{display:none;flex-direction:column;min-height:100vh;}
+    #topbar{background:#1565c0;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+    #topbar h1{font-size:17px;font-weight:bold;}
+    .topbar-right{display:flex;align-items:center;gap:12px;}
+    #last-updated{font-size:11px;color:#bbdefb;}
+    .btn-sm{padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:bold;cursor:pointer;}
+    .btn-gray{background:#37474f;color:#ccc;}
     .btn-red{background:#c62828;color:#fff;}
+    /* NAV TABS */
+    #nav-tabs{display:flex;background:#0d2040;border-bottom:2px solid #1a3a6b;}
+    .nav-tab{padding:12px 20px;font-size:13px;font-weight:bold;cursor:pointer;color:#78909c;border-bottom:3px solid transparent;transition:all .2s;}
+    .nav-tab.active{color:#90caf9;border-bottom-color:#1565c0;}
+    /* DASHBOARD TAB */
+    #tab-dashboard{display:block;}
     #stats{display:flex;flex-wrap:wrap;gap:10px;padding:14px 16px;background:#0d2040;}
     .stat{flex:1;min-width:120px;background:#1a3a6b;border-radius:12px;padding:12px 16px;}
     .stat-label{font-size:11px;color:#90caf9;text-transform:uppercase;letter-spacing:.5px;}
@@ -21,146 +46,433 @@
     .stat-value.blue{color:#64b5f6;}
     #pbar-wrap{padding:0 16px 12px;background:#0d2040;}
     #pbar-bg{background:#1a3a6b;border-radius:10px;height:20px;overflow:hidden;}
-    #pbar-fill{background:linear-gradient(90deg,#1565c0,#2e7d32);height:100%;border-radius:10px;transition:width .6s ease;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;color:#fff;}
+    #pbar-fill{background:linear-gradient(90deg,#1565c0,#2e7d32);height:100%;border-radius:10px;transition:width .6s ease;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;}
     #map{height:340px;}
     #tractors-section{padding:14px 16px;background:#0d2040;border-top:2px solid #1a3a6b;}
     #tractors-section h2{font-size:13px;text-transform:uppercase;color:#90caf9;letter-spacing:.5px;margin-bottom:10px;}
     .tractor-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1a3a6b;font-size:13px;}
     .tractor-dot{width:12px;height:12px;border-radius:50%;background:#1565c0;flex-shrink:0;}
     .tractor-name{font-weight:bold;}
-    .tractor-coords{font-size:11px;color:#78909c;margin-top:1px;}
-    #lists{display:flex;flex-wrap:wrap;}
-    .list-col{flex:1;min-width:280px;padding:14px 16px;}
-    .list-col h2{font-size:13px;text-transform:uppercase;color:#90caf9;letter-spacing:.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a3a6b;}
-    .prop-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #1a3a6b;}
-    .num-badge{flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;}
-    .num-badge.done{background:#2e7d32;}
-    .num-badge.pending{background:#c62828;}
-    .row-name{font-size:14px;font-weight:bold;}
-    .row-addr{font-size:11px;color:#78909c;margin-top:1px;}
-    .row-meta{font-size:11px;color:#78909c;margin-top:2px;}
-    #reset-section{padding:16px;background:#0a1628;text-align:center;border-top:2px solid #1a3a6b;}
-    #reset-section p{font-size:13px;color:#78909c;margin-bottom:10px;}
+    #lists{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:14px 16px;background:#0a1628;}
+    .list-section h3{font-size:12px;text-transform:uppercase;color:#90caf9;letter-spacing:.5px;margin-bottom:10px;}
+    .list-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #1a3a6b;font-size:12px;}
+    .list-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;flex-shrink:0;}
+    .list-num.done{background:#2e7d32;}
+    .list-num.todo{background:#c62828;}
+    #reset-section{padding:14px 16px;background:#0a1628;border-top:2px solid #1a3a6b;}
+    /* MANAGE CLIENTS TAB */
+    #tab-clients{display:none;padding:16px;}
+    .section-title{font-size:16px;font-weight:bold;color:#90caf9;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #1a3a6b;}
+    .add-client-form{background:#0d2040;border-radius:12px;padding:16px;margin-bottom:20px;border:1px solid #1a3a6b;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+    .form-field label{display:block;font-size:11px;color:#90caf9;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+    .form-field input{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid #1a3a6b;background:#0a1628;color:#fff;font-size:14px;outline:none;transition:border-color .2s;}
+    .form-field input:focus{border-color:#1565c0;}
+    .btn-green{background:#2e7d32;color:#fff;}
+    .btn-green:hover{background:#388e3c;}
+    .btn-add{padding:10px 20px;border-radius:8px;border:none;font-size:14px;font-weight:bold;cursor:pointer;}
+    #form-msg{font-size:13px;min-height:18px;margin-top:8px;}
+    .form-msg-ok{color:#66bb6a;}
+    .form-msg-err{color:#ef5350;}
+    .client-list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+    .client-count{font-size:13px;color:#78909c;}
+    #client-table{width:100%;border-collapse:collapse;}
+    #client-table th{text-align:left;font-size:11px;color:#90caf9;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:2px solid #1a3a6b;}
+    #client-table td{padding:9px 10px;border-bottom:1px solid #1a3a6b;font-size:13px;vertical-align:middle;}
+    #client-table tr:hover td{background:#0d2040;}
+    .remove-btn{background:#c62828;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:bold;cursor:pointer;}
+    .remove-btn:hover{background:#e53935;}
+    .order-badge{background:#1a3a6b;color:#90caf9;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:bold;}
+    #search-clients{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid #1a3a6b;background:#0d2040;color:#fff;font-size:14px;outline:none;margin-bottom:14px;}
+    #search-clients:focus{border-color:#1565c0;}
   </style>
 </head>
 <body>
-<div id="topbar">
-  <h1>Snow Route - Manager Dashboard</h1>
-  <span id="last-updated" style="font-size:12px;color:#90caf9;"></span>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">❄️</div>
+    <div class="login-title">Snow Route</div>
+    <div class="login-sub">Manager Dashboard — Sign In</div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="manager@example.com" autocomplete="email"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="Password" autocomplete="current-password"/>
+    </div>
+    <div id="login-error"></div>
+    <button class="btn btn-blue" onclick="doLogin()">Sign In</button>
+  </div>
 </div>
-<div id="stats">
-  <div class="stat"><div class="stat-label">Route Progress</div><div class="stat-value blue" id="s-pct">0%</div></div>
-  <div class="stat"><div class="stat-label">Completed</div><div class="stat-value green" id="s-done">0</div></div>
-  <div class="stat"><div class="stat-label">Remaining</div><div class="stat-value red" id="s-left">0</div></div>
-  <div class="stat"><div class="stat-label">Active Drivers</div><div class="stat-value blue" id="s-drivers">0</div></div>
+
+<!-- APP SCREEN -->
+<div id="app-screen">
+  <div id="topbar">
+    <h1>❄️ Snow Route — Manager Dashboard</h1>
+    <div class="topbar-right">
+      <span id="last-updated"></span>
+      <button class="btn-sm btn-gray" onclick="doSignOut()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div id="nav-tabs">
+    <div class="nav-tab active" id="tab-btn-dashboard" onclick="switchTab('dashboard')">📊 Live Dashboard</div>
+    <div class="nav-tab" id="tab-btn-clients" onclick="switchTab('clients')">📋 Manage Clients</div>
+  </div>
+
+  <!-- DASHBOARD TAB -->
+  <div id="tab-dashboard">
+    <div id="stats">
+      <div class="stat"><div class="stat-label">Route Progress</div><div class="stat-value blue" id="s-pct">0%</div></div>
+      <div class="stat"><div class="stat-label">Completed</div><div class="stat-value green" id="s-done">0</div></div>
+      <div class="stat"><div class="stat-label">Remaining</div><div class="stat-value red" id="s-left">0</div></div>
+      <div class="stat"><div class="stat-label">Active Drivers</div><div class="stat-value blue" id="s-drivers">0</div></div>
+    </div>
+    <div id="pbar-wrap">
+      <div id="pbar-bg"><div id="pbar-fill" style="width:0%">0%</div></div>
+    </div>
+    <div id="map"></div>
+    <div id="tractors-section">
+      <h2>Live Tractor Positions</h2>
+      <div id="tractor-list"></div>
+    </div>
+    <div id="lists">
+      <div class="list-section">
+        <h3>Completed Driveways</h3>
+        <div id="done-list"></div>
+      </div>
+      <div class="list-section">
+        <h3>Still To Do</h3>
+        <div id="todo-list"></div>
+      </div>
+    </div>
+    <div id="reset-section">
+      <button class="btn btn-red" style="max-width:200px;" onclick="confirmReset()">Reset All Progress</button>
+    </div>
+  </div>
+
+  <!-- MANAGE CLIENTS TAB -->
+  <div id="tab-clients">
+    <div class="section-title">➕ Add New Client</div>
+    <div class="add-client-form">
+      <div class="form-row">
+        <div class="form-field">
+          <label>Client Name *</label>
+          <input type="text" id="new-name" placeholder="e.g. John Smith"/>
+        </div>
+        <div class="form-field">
+          <label>Address *</label>
+          <input type="text" id="new-addr" placeholder="e.g. 123 Main St, Bracebridge ON"/>
+        </div>
+      </div>
+      <div class="form-row-3">
+        <div class="form-field">
+          <label>Latitude *</label>
+          <input type="number" id="new-lat" placeholder="e.g. 45.0334" step="0.000001"/>
+        </div>
+        <div class="form-field">
+          <label>Longitude *</label>
+          <input type="number" id="new-lng" placeholder="e.g. -79.3089" step="0.000001"/>
+        </div>
+        <div class="form-field">
+          <label>Route Order</label>
+          <input type="number" id="new-order" placeholder="e.g. 59 (auto if blank)"/>
+        </div>
+      </div>
+      <button class="btn-add btn-green" onclick="addClient()">➕ Add Client to Route</button>
+      <div id="form-msg"></div>
+    </div>
+
+    <div class="section-title">👥 Current Clients (<span id="client-count">0</span>)</div>
+    <input type="text" id="search-clients" placeholder="🔍 Search clients by name or address..." oninput="renderClientTable()"/>
+    <table id="client-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Coords</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="client-tbody"></tbody>
+    </table>
+  </div>
 </div>
-<div id="pbar-wrap"><div id="pbar-bg"><div id="pbar-fill" style="width:0%">0%</div></div></div>
-<div id="map"></div>
-<div id="tractors-section">
-  <h2>Live Tractor Positions</h2>
-  <div id="tractor-list"><div style="color:#78909c;font-size:13px;">Waiting for drivers to connect...</div></div>
-</div>
-<div id="lists">
-  <div class="list-col"><h2>Completed Driveways</h2><div id="done-list"></div></div>
-  <div class="list-col"><h2>Still To Do</h2><div id="todo-list"></div></div>
-</div>
-<div id="reset-section">
-  <p>Use the reset button at the start of each new storm to clear all completed statuses.</p>
-  <button class="btn btn-red" onclick="resetRoute()">Reset Route for New Storm</button>
-</div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getDatabase,ref,onValue,remove}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import{getDatabase,ref,onValue,remove,set,push,get}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
 const firebaseConfig={apiKey:"AIzaSyDx5L68cyP4UbOnPLSeV8tuAzLg9znBtSE",authDomain:"snow-route-29bc5.firebaseapp.com",databaseURL:"https://snow-route-29bc5-default-rtdb.firebaseio.com",projectId:"snow-route-29bc5",storageBucket:"snow-route-29bc5.firebasestorage.app",messagingSenderId:"428738240151",appId:"1:428738240151:web:e71f764adaebe4ea73d3d2"};
-const PROPERTIES=[
-  {id:"p1",order:1,name:"Mini Storage",addr:"1711 Winhara Rd, Bracebridge ON",lat:44.992892,lng:-79.309460},
-  {id:"p2",order:2,name:"Flo",addr:"5 Memory Lane, Bracebridge ON",lat:45.010375,lng:-79.305802},
-  {id:"p3",order:3,name:"Mary",addr:"1440 Cedar Lane, Bracebridge ON",lat:45.064385,lng:-79.304029},
-  {id:"p4",order:4,name:"Derek",addr:"1200 Highfalls Rd, Bracebridge ON",lat:45.087478,lng:-79.315615},
-  {id:"p5",order:5,name:"Salvation Army",addr:"118 Ann St, Bracebridge ON",lat:45.046717,lng:-79.310003},
-  {id:"p6",order:6,name:"Helene",addr:"28 Milton St, Bracebridge ON",lat:45.033716,lng:-79.305076},
-  {id:"p7",order:7,name:"Rivers Edge Condos",addr:"Rivers Edge Condos, Bracebridge ON",lat:45.039500,lng:-79.314000},
-  {id:"p8",order:8,name:"Nordeman",addr:"90 Milton St, Bracebridge ON",lat:45.034200,lng:-79.306000},
-  {id:"p9",order:9,name:"Cathy",addr:"127 Milton St, Bracebridge ON",lat:45.033716,lng:-79.305500},
-  {id:"p10",order:10,name:"Nordeman 2 driveways",addr:"3 King St, Bracebridge ON",lat:45.039200,lng:-79.304600},
-  {id:"p11",order:11,name:"Erik",addr:"33 King St, Bracebridge ON",lat:45.039400,lng:-79.304800},
-  {id:"p12",order:12,name:"Nordeman",addr:"619 Cedar Lane, Bracebridge ON",lat:45.064500,lng:-79.304100},
-  {id:"p13",order:13,name:"Rhonda",addr:"120 Ann St, Bracebridge ON",lat:45.046900,lng:-79.310100},
-  {id:"p14",order:14,name:"Karen",addr:"12 Church St, Bracebridge ON",lat:45.038035,lng:-79.313461},
-  {id:"p15",order:15,name:"Tony",addr:"126 Holditch St, Bracebridge ON",lat:45.034379,lng:-79.315852},
-  {id:"p16",order:16,name:"Wellington Apts 37/39",addr:"37 Wellington St, Bracebridge ON",lat:45.040341,lng:-79.320011},
-  {id:"p17",order:17,name:"Wellington Apts 94",addr:"94 Wellington St, Bracebridge ON",lat:45.042517,lng:-79.322305},
-  {id:"p18",order:18,name:"Verla",addr:"59 Santas Village Rd, Bracebridge ON",lat:45.023742,lng:-79.358715},
-  {id:"p19",order:19,name:"Lady 1",addr:"19 Gainsborough, Bracebridge ON",lat:45.031620,lng:-79.324650},
-  {id:"p20",order:20,name:"Joe",addr:"16 Gainsborough, Bracebridge ON",lat:45.031750,lng:-79.324750},
-  {id:"p21",order:21,name:"Lady 2",addr:"17 Gainsborough, Bracebridge ON",lat:45.031880,lng:-79.324850},
-  {id:"p22",order:22,name:"Hough",addr:"23 Gainsborough, Bracebridge ON",lat:45.032100,lng:-79.325050},
-  {id:"p23",order:23,name:"Anne Swan",addr:"1A MacArthur Dr, Bracebridge ON",lat:45.032074,lng:-79.328087},
-  {id:"p24",order:24,name:"53 Ewing",addr:"53 Ewing St, Bracebridge ON",lat:45.034274,lng:-79.320241},
-  {id:"p25",order:25,name:"57 Ewing",addr:"57 Ewing St, Bracebridge ON",lat:45.034374,lng:-79.320341},
-  {id:"p26",order:26,name:"65 Ewing",addr:"65 Ewing St, Bracebridge ON",lat:45.034474,lng:-79.320441},
-  {id:"p27",order:27,name:"91 Ewing",addr:"91 Ewing St, Bracebridge ON",lat:45.034474,lng:-79.320641},
-  {id:"p28",order:28,name:"93 Ewing",addr:"93 Ewing St, Bracebridge ON",lat:45.034374,lng:-79.320741},
-  {id:"p29",order:29,name:"19 Inveraray",addr:"19 Inveraray Ave, Bracebridge ON",lat:45.038200,lng:-79.322500},
-  {id:"p30",order:30,name:"35 Inveraray Crt",addr:"35 Inveraray Crt, Bracebridge ON",lat:45.038400,lng:-79.322700},
-  {id:"p31",order:31,name:"47 Inveraray",addr:"47 Inveraray Ave, Bracebridge ON",lat:45.038600,lng:-79.322900},
-  {id:"p32",order:32,name:"281 Dill St",addr:"281 Dill St, Bracebridge ON",lat:45.035066,lng:-79.322819},
-  {id:"p33",order:33,name:"289 Dill St",addr:"289 Dill St, Bracebridge ON",lat:45.035166,lng:-79.322919},
-  {id:"p34",order:34,name:"243 Dill St",addr:"243 Dill St, Bracebridge ON",lat:45.034966,lng:-79.322719},
-  {id:"p35",order:35,name:"67 Spencer St",addr:"67 Spencer St, Bracebridge ON",lat:45.038081,lng:-79.320626},
-  {id:"p36",order:36,name:"69 Spencer St",addr:"69 Spencer St, Bracebridge ON",lat:45.038200,lng:-79.320696},
-  {id:"p37",order:37,name:"11 Andrea Dr",addr:"11 Andrea Dr, Bracebridge ON",lat:45.036852,lng:-79.321854},
-  {id:"p38",order:38,name:"Summer",addr:"38 Killdeer, Bracebridge ON",lat:45.047094,lng:-79.333188},
-  {id:"p39",order:39,name:"Lindsay",addr:"21 Killdeer, Bracebridge ON",lat:45.047294,lng:-79.333388},
-  {id:"p40",order:40,name:"June",addr:"50 Killdeer, Bracebridge ON",lat:45.046894,lng:-79.332988},
-  {id:"p41",order:41,name:"31 Fawnbrook",addr:"31 Fawnbrook Cres, Bracebridge ON",lat:45.057878,lng:-79.323654},
-  {id:"p42",order:42,name:"31 Hunter Pl",addr:"31 Hunter Place, Bracebridge ON",lat:45.059259,lng:-79.320122},
-  {id:"p43",order:43,name:"33 Hunter Pl",addr:"33 Hunter Place, Bracebridge ON",lat:45.059159,lng:-79.320222},
-  {id:"p44",order:44,name:"5 Hunter Pl",addr:"5 Hunter Place, Bracebridge ON",lat:45.059359,lng:-79.320322},
-  {id:"p45",order:45,name:"21 Browning",addr:"21 Browning Blvd, Bracebridge ON",lat:45.061295,lng:-79.317362},
-  {id:"p46",order:46,name:"56 Chamberry",addr:"56 Chamberry, Bracebridge ON",lat:45.061000,lng:-79.319000},
-  {id:"p47",order:47,name:"52 Dyer Cres",addr:"52 Dyer Cres, Bracebridge ON",lat:45.060437,lng:-79.314378},
-  {id:"p48",order:48,name:"39 Stother",addr:"39 Stother Cres, Bracebridge ON",lat:45.058658,lng:-79.316903},
-  {id:"p49",order:49,name:"3 Clearstream",addr:"3 Clearstream Crt, Bracebridge ON",lat:45.064367,lng:-79.321506},
-  {id:"p50",order:50,name:"31 Gladys Ave",addr:"31 Gladys Ave, Bracebridge ON",lat:45.065945,lng:-79.326820},
-  {id:"p51",order:51,name:"20 Doland St",addr:"20 Doland St, Bracebridge ON",lat:45.063000,lng:-79.323000},
-  {id:"p52",order:52,name:"106 Meadow Heights",addr:"106 Meadow Heights Dr, Bracebridge ON",lat:45.055764,lng:-79.339821},
-  {id:"p53",order:53,name:"120 Meadow Heights",addr:"120 Meadow Heights Dr, Bracebridge ON",lat:45.055864,lng:-79.339921},
-  {id:"p54",order:54,name:"38 Brian Rd",addr:"38 Brian Rd, Bracebridge ON",lat:45.054912,lng:-79.337888},
-  {id:"p55",order:55,name:"21 Brian Rd",addr:"21 Brian Rd, Bracebridge ON",lat:45.055012,lng:-79.337988},
-  {id:"p56",order:56,name:"11 Daleman Dr",addr:"11 Daleman Dr, Bracebridge ON",lat:45.053811,lng:-79.336569},
-  {id:"p57",order:57,name:"72 Glendale Rd",addr:"72 Glendale Rd, Bracebridge ON",lat:45.050225,lng:-79.328401},
-  {id:"p58",order:58,name:"22 Kaye Rd",addr:"22 Kaye Rd, Bracebridge ON",lat:45.054339,lng:-79.335000},
+
+const fbApp=initializeApp(firebaseConfig);
+const db=getDatabase(fbApp);
+const auth=getAuth(fbApp);
+
+// ── DEFAULT PROPERTIES (used as fallback) ──────────────────────────
+const DEFAULT_PROPERTIES=[
+{id:"p1",order:1,name:"Mini Storage",addr:"1711 Winhara Rd, Bracebridge ON",lat:44.992892,lng:-79.309460},
+{id:"p2",order:2,name:"Flo",addr:"5 Memory Lane, Bracebridge ON",lat:45.010375,lng:-79.305802},
+{id:"p3",order:3,name:"Mary",addr:"1440 Cedar Lane, Bracebridge ON",lat:45.064385,lng:-79.304029},
+{id:"p4",order:4,name:"Derek",addr:"1200 Highfalls Rd, Bracebridge ON",lat:45.087478,lng:-79.315615},
+{id:"p5",order:5,name:"Salvation Army",addr:"118 Ann St, Bracebridge ON",lat:45.046717,lng:-79.310003},
+{id:"p6",order:6,name:"Helene",addr:"28 Milton St, Bracebridge ON",lat:45.033716,lng:-79.305076},
+{id:"p7",order:7,name:"Rivers Edge Condos",addr:"Rivers Edge Condos, Bracebridge ON",lat:45.039500,lng:-79.314000},
+{id:"p8",order:8,name:"Nordeman",addr:"90 Milton St, Bracebridge ON",lat:45.034200,lng:-79.306000},
+{id:"p9",order:9,name:"Cathy",addr:"127 Milton St, Bracebridge ON",lat:45.033716,lng:-79.305500},
+{id:"p10",order:10,name:"Nordeman 2 driveways",addr:"3 King St, Bracebridge ON",lat:45.039200,lng:-79.304600},
+{id:"p11",order:11,name:"Erik",addr:"33 King St, Bracebridge ON",lat:45.039400,lng:-79.304800},
+{id:"p12",order:12,name:"Nordeman",addr:"619 Cedar Lane, Bracebridge ON",lat:45.064500,lng:-79.304100},
+{id:"p13",order:13,name:"Rhonda",addr:"120 Ann St, Bracebridge ON",lat:45.046900,lng:-79.310100},
+{id:"p14",order:14,name:"Karen",addr:"12 Church St, Bracebridge ON",lat:45.038035,lng:-79.313461},
+{id:"p15",order:15,name:"Tony",addr:"126 Holditch St, Bracebridge ON",lat:45.034379,lng:-79.315852},
+{id:"p16",order:16,name:"Wellington Apts 37/39",addr:"37 Wellington St, Bracebridge ON",lat:45.040341,lng:-79.320011},
+{id:"p17",order:17,name:"Wellington Apts 94",addr:"94 Wellington St, Bracebridge ON",lat:45.042517,lng:-79.322305},
+{id:"p18",order:18,name:"Verla",addr:"59 Santas Village Rd, Bracebridge ON",lat:45.023742,lng:-79.358715},
+{id:"p19",order:19,name:"Lady 1",addr:"19 Gainsborough, Bracebridge ON",lat:45.031620,lng:-79.324650},
+{id:"p20",order:20,name:"Joe",addr:"16 Gainsborough, Bracebridge ON",lat:45.031750,lng:-79.324750},
+{id:"p21",order:21,name:"Lady 2",addr:"17 Gainsborough, Bracebridge ON",lat:45.031880,lng:-79.324850},
+{id:"p22",order:22,name:"Hough",addr:"23 Gainsborough, Bracebridge ON",lat:45.032100,lng:-79.325050},
+{id:"p23",order:23,name:"Anne Swan",addr:"1A MacArthur Dr, Bracebridge ON",lat:45.032074,lng:-79.328087},
+{id:"p24",order:24,name:"53 Ewing",addr:"53 Ewing St, Bracebridge ON",lat:45.034274,lng:-79.320241},
+{id:"p25",order:25,name:"57 Ewing",addr:"57 Ewing St, Bracebridge ON",lat:45.034374,lng:-79.320341},
+{id:"p26",order:26,name:"65 Ewing",addr:"65 Ewing St, Bracebridge ON",lat:45.034474,lng:-79.320441},
+{id:"p27",order:27,name:"91 Ewing",addr:"91 Ewing St, Bracebridge ON",lat:45.034474,lng:-79.320641},
+{id:"p28",order:28,name:"93 Ewing",addr:"93 Ewing St, Bracebridge ON",lat:45.034374,lng:-79.320741},
+{id:"p29",order:29,name:"19 Inveraray",addr:"19 Inveraray Ave, Bracebridge ON",lat:45.038200,lng:-79.322500},
+{id:"p30",order:30,name:"35 Inveraray Crt",addr:"35 Inveraray Crt, Bracebridge ON",lat:45.038400,lng:-79.322700},
+{id:"p31",order:31,name:"47 Inveraray",addr:"47 Inveraray Ave, Bracebridge ON",lat:45.038600,lng:-79.322900},
+{id:"p32",order:32,name:"281 Dill St",addr:"281 Dill St, Bracebridge ON",lat:45.035066,lng:-79.322819},
+{id:"p33",order:33,name:"289 Dill St",addr:"289 Dill St, Bracebridge ON",lat:45.035166,lng:-79.322919},
+{id:"p34",order:34,name:"243 Dill St",addr:"243 Dill St, Bracebridge ON",lat:45.034966,lng:-79.322719},
+{id:"p35",order:35,name:"67 Spencer St",addr:"67 Spencer St, Bracebridge ON",lat:45.038081,lng:-79.320626},
+{id:"p36",order:36,name:"69 Spencer St",addr:"69 Spencer St, Bracebridge ON",lat:45.038200,lng:-79.320696},
+{id:"p37",order:37,name:"11 Andrea Dr",addr:"11 Andrea Dr, Bracebridge ON",lat:45.036852,lng:-79.321854},
+{id:"p38",order:38,name:"Summer",addr:"38 Killdeer, Bracebridge ON",lat:45.047094,lng:-79.333188},
+{id:"p39",order:39,name:"Lindsay",addr:"21 Killdeer, Bracebridge ON",lat:45.047294,lng:-79.333388},
+{id:"p40",order:40,name:"June",addr:"50 Killdeer, Bracebridge ON",lat:45.046894,lng:-79.332988},
+{id:"p41",order:41,name:"31 Fawnbrook",addr:"31 Fawnbrook Cres, Bracebridge ON",lat:45.057878,lng:-79.323654},
+{id:"p42",order:42,name:"31 Hunter Pl",addr:"31 Hunter Place, Bracebridge ON",lat:45.059259,lng:-79.320122},
+{id:"p43",order:43,name:"33 Hunter Pl",addr:"33 Hunter Place, Bracebridge ON",lat:45.059159,lng:-79.320222},
+{id:"p44",order:44,name:"5 Hunter Pl",addr:"5 Hunter Place, Bracebridge ON",lat:45.059359,lng:-79.320322},
+{id:"p45",order:45,name:"21 Browning",addr:"21 Browning Blvd, Bracebridge ON",lat:45.061295,lng:-79.317362},
+{id:"p46",order:46,name:"56 Chamberry",addr:"56 Chamberry, Bracebridge ON",lat:45.061000,lng:-79.319000},
+{id:"p47",order:47,name:"52 Dyer Cres",addr:"52 Dyer Cres, Bracebridge ON",lat:45.060437,lng:-79.314378},
+{id:"p48",order:48,name:"39 Stother",addr:"39 Stother Cres, Bracebridge ON",lat:45.058658,lng:-79.316903},
+{id:"p49",order:49,name:"3 Clearstream",addr:"3 Clearstream Crt, Bracebridge ON",lat:45.064367,lng:-79.321506},
+{id:"p50",order:50,name:"31 Gladys Ave",addr:"31 Gladys Ave, Bracebridge ON",lat:45.065945,lng:-79.326820},
+{id:"p51",order:51,name:"20 Doland St",addr:"20 Doland St, Bracebridge ON",lat:45.063000,lng:-79.323000},
+{id:"p52",order:52,name:"106 Meadow Heights",addr:"106 Meadow Heights Dr, Bracebridge ON",lat:45.055764,lng:-79.339821},
+{id:"p53",order:53,name:"120 Meadow Heights",addr:"120 Meadow Heights Dr, Bracebridge ON",lat:45.055864,lng:-79.339921},
+{id:"p54",order:54,name:"38 Brian Rd",addr:"38 Brian Rd, Bracebridge ON",lat:45.054912,lng:-79.337888},
+{id:"p55",order:55,name:"21 Brian Rd",addr:"21 Brian Rd, Bracebridge ON",lat:45.055012,lng:-79.337988},
+{id:"p56",order:56,name:"11 Daleman Dr",addr:"11 Daleman Dr, Bracebridge ON",lat:45.053811,lng:-79.336569},
+{id:"p57",order:57,name:"72 Glendale Rd",addr:"72 Glendale Rd, Bracebridge ON",lat:45.050225,lng:-79.328401},
+{id:"p58",order:58,name:"22 Kaye Rd",addr:"22 Kaye Rd, Bracebridge ON",lat:45.054339,lng:-79.335000}
 ];
-const fbApp=initializeApp(firebaseConfig),db=getDatabase(fbApp);
-let map,propMarkers={},tractorMarkers={};
-map=L.map('map').setView([45.031, -79.320], 14);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
-onValue(ref(db,'route/properties'),snap=>{
-  const data=snap.val()||{};
-  const done=PROPERTIES.filter(p=>data[p.id]?.done===true);
-  const todo=PROPERTIES.filter(p=>!data[p.id]?.done);
-  const pct=PROPERTIES.length?Math.round(done.length/PROPERTIES.length*100):0;
-  document.getElementById('s-pct').textContent=pct+'%';
-  document.getElementById('s-done').textContent=done.length;
-  document.getElementById('s-left').textContent=todo.length;
-  document.getElementById('pbar-fill').style.width=pct+'%';
-  document.getElementById('pbar-fill').textContent=pct+'%';
-  document.getElementById('last-updated').textContent='Updated: '+new Date().toLocaleTimeString();
-  document.getElementById('done-list').innerHTML=done.length===0?'<div style="color:#78909c;font-size:13px;padding:8px 0;">None yet</div>':done.map(p=>'<div class="prop-row"><div class="num-badge done">'+p.order+'</div><div><div class="row-name">'+p.name+'</div><div class="row-addr">'+p.addr+'</div><div class="row-meta">by '+(data[p.id]?.completedBy||'unknown')+'</div></div></div>').join('');
-  document.getElementById('todo-list').innerHTML=todo.length===0?'<div style="color:#66bb6a;font-size:13px;padding:8px 0;">All driveways complete!</div>':todo.map(p=>'<div class="prop-row"><div class="num-badge pending">'+p.order+'</div><div><div class="row-name">'+p.name+'</div><div class="row-addr">'+p.addr+'</div></div></div>').join('');
-  PROPERTIES.forEach(p=>{const finished=data[p.id]?.done===true;const color=finished?'#2e7d32':'#c62828';if(propMarkers[p.id])map.removeLayer(propMarkers[p.id]);const icon=L.divIcon({className:'',html:'<div style="background:'+color+';width:28px;height:28px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:12px;">'+p.order+'</div>',iconSize:[28,28],iconAnchor:[14,14]});propMarkers[p.id]=L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup('<b>#'+p.order+' - '+p.name+'</b><br>'+p.addr+'<br>'+(finished?'Done':'Pending'));});
+
+let PROPERTIES=[...DEFAULT_PROPERTIES];
+let map,initialized=false;
+
+// ── AUTH ───────────────────────────────────────────────────────────
+window.doLogin=async function(){
+  const email=document.getElementById('login-email').value.trim();
+  const pwd=document.getElementById('login-password').value;
+  const errEl=document.getElementById('login-error');
+  errEl.textContent='Signing in...';
+  try{
+    await signInWithEmailAndPassword(auth,email,pwd);
+    errEl.textContent='';
+  }catch(e){
+    errEl.textContent='Invalid email or password. Please try again.';
+  }
+};
+
+window.doSignOut=async function(){
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app-screen').style.display='flex';
+    if(!initialized){initialized=true;initApp();}
+  }else{
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('app-screen').style.display='none';
+  }
 });
-onValue(ref(db,'operators'),snap=>{
-  const ops=snap.val()||{};const active=Object.entries(ops);
-  document.getElementById('s-drivers').textContent=active.length;
-  document.getElementById('tractor-list').innerHTML=active.length===0?'<div style="color:#78909c;font-size:13px;">No drivers active</div>':active.map(([uid,v])=>'<div class="tractor-row"><div class="tractor-dot"></div><div><div class="tractor-name">'+( v.email?.split('@')[0]||uid)+'</div><div class="tractor-coords">'+(v.lat?.toFixed(5)||'?')+', '+(v.lng?.toFixed(5)||'?')+'</div></div></div>').join('');
-  const activeIds=new Set(active.map(([id])=>id));
-  Object.keys(tractorMarkers).forEach(id=>{if(!activeIds.has(id)){map.removeLayer(tractorMarkers[id]);delete tractorMarkers[id];}});
-  active.forEach(([uid,v])=>{if(!v.lat)return;const name=v.email?.split('@')[0]||uid;const icon=L.divIcon({className:'',html:'<div style="background:#1565c0;width:32px;height:32px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 12px #1565c0;display:flex;align-items:center;justify-content:center;font-size:16px;">T</div>',iconSize:[32,32],iconAnchor:[16,16]});if(tractorMarkers[uid]){tractorMarkers[uid].setLatLng([v.lat,v.lng]);}else{tractorMarkers[uid]=L.marker([v.lat,v.lng],{icon,zIndexOffset:1000}).addTo(map).bindPopup(name);}});
-});
-window.resetRoute=async()=>{const confirmed=confirm('RESET ROUTE FOR NEW STORM?\n\nThis will clear ALL completed driveways and reset every stop back to pending (red).\n\nThis cannot be undone. Continue?');if(!confirmed)return;await remove(ref(db,'route/properties'));alert('Route has been reset! All stops are now pending.');};
+
+// Allow Enter key on login
+document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')window.doLogin();});
+document.getElementById('login-email').addEventListener('keydown',e=>{if(e.key==='Enter')window.doLogin();});
+
+// ── TAB NAVIGATION ─────────────────────────────────────────────────
+window.switchTab=function(tab){
+  document.getElementById('tab-dashboard').style.display=tab==='dashboard'?'block':'none';
+  document.getElementById('tab-clients').style.display=tab==='clients'?'block':'none';
+  document.getElementById('tab-btn-dashboard').className='nav-tab'+(tab==='dashboard'?' active':'');
+  document.getElementById('tab-btn-clients').className='nav-tab'+(tab==='clients'?' active':'');
+  if(tab==='clients')renderClientTable();
+};
+
+// ── INIT APP ────────────────────────────────────────────────────────
+function initApp(){
+  // Init map
+  map=L.map('map').setView([45.035,-79.315],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+
+  // Load custom properties from Firebase if they exist
+  get(ref(db,'properties')).then(snap=>{
+    if(snap.exists()){
+      const data=snap.val();
+      PROPERTIES=Object.values(data).sort((a,b)=>a.order-b.order);
+    }
+    startListening();
+  }).catch(()=>startListening());
+}
+
+function startListening(){
+  // Add property markers to map
+  PROPERTIES.forEach(p=>{
+    const icon=L.divIcon({className:'',html:'<div style="background:#c62828;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;border:2px solid #fff;">'+p.order+'</div>',iconSize:[26,26],iconAnchor:[13,13]});
+    L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup('<b>'+p.order+'. '+p.name+'</b><br/>'+p.addr);
+  });
+
+  // Listen to completions
+  onValue(ref(db,'completed'),snap=>{
+    const data=snap.val()||{};
+    const done=new Set(Object.keys(data));
+    const total=PROPERTIES.length;
+    const doneCount=PROPERTIES.filter(p=>done.has(p.id)).length;
+    const pct=total>0?Math.round(doneCount/total*100):0;
+    document.getElementById('s-pct').textContent=pct+'%';
+    document.getElementById('s-done').textContent=doneCount;
+    document.getElementById('s-left').textContent=total-doneCount;
+    const fill=document.getElementById('pbar-fill');
+    fill.style.width=pct+'%';
+    fill.textContent=pct+'%';
+    document.getElementById('last-updated').textContent='Updated: '+new Date().toLocaleTimeString();
+
+    // Render done/todo lists
+    const doneList=document.getElementById('done-list');
+    const todoList=document.getElementById('todo-list');
+    doneList.innerHTML='';todoList.innerHTML='';
+    PROPERTIES.forEach(p=>{
+      const isDone=done.has(p.id);
+      const by=data[p.id]?'by '+data[p.id].operator:'';
+      const div=document.createElement('div');
+      div.className='list-item';
+      div.innerHTML='<div class="list-num '+(isDone?'done':'todo')+'">'+p.order+'</div><div><b>'+p.name+'</b><br/><span style="color:#78909c;font-size:11px;">'+p.addr+'</span>'+(by?'<br/><span style="color:#64b5f6;font-size:11px;">'+by+'</span>':'')+'</div>';
+      (isDone?doneList:todoList).appendChild(div);
+    });
+  });
+
+  // Listen to operator positions
+  onValue(ref(db,'operators'),snap=>{
+    const ops=snap.val()||{};
+    const active=Object.entries(ops).filter(([,v])=>v.lat&&v.lng);
+    document.getElementById('s-drivers').textContent=active.length;
+    const tList=document.getElementById('tractor-list');
+    tList.innerHTML='';
+    active.forEach(([name,v])=>{
+      const d=document.createElement('div');
+      d.className='tractor-row';
+      d.innerHTML='<div class="tractor-dot"></div><div><div class="tractor-name">'+name+'</div><div style="color:#78909c;font-size:11px;">'+v.lat.toFixed(5)+', '+v.lng.toFixed(5)+'</div></div>';
+      tList.appendChild(d);
+    });
+  });
+}
+
+// ── RESET ───────────────────────────────────────────────────────────
+window.confirmReset=function(){
+  if(confirm('Reset ALL completed driveways? This cannot be undone.')){
+    remove(ref(db,'completed'));
+  }
+};
+
+// ── MANAGE CLIENTS ─────────────────────────────────────────────────
+window.addClient=async function(){
+  const name=document.getElementById('new-name').value.trim();
+  const addr=document.getElementById('new-addr').value.trim();
+  const lat=parseFloat(document.getElementById('new-lat').value);
+  const lng=parseFloat(document.getElementById('new-lng').value);
+  const orderInput=document.getElementById('new-order').value;
+  const msgEl=document.getElementById('form-msg');
+
+  if(!name||!addr||isNaN(lat)||isNaN(lng)){
+    msgEl.textContent='Please fill in Name, Address, Latitude, and Longitude.';
+    msgEl.className='form-msg-err';
+    return;
+  }
+
+  const maxOrder=PROPERTIES.reduce((m,p)=>Math.max(m,p.order),0);
+  const order=orderInput&&!isNaN(parseInt(orderInput))?parseInt(orderInput):maxOrder+1;
+  const id='p'+(Date.now());
+  const newProp={id,order,name,addr,lat,lng};
+
+  PROPERTIES.push(newProp);
+  PROPERTIES.sort((a,b)=>a.order-b.order);
+
+  // Rebuild properties object for Firebase
+  const propsObj={};
+  PROPERTIES.forEach(p=>{propsObj[p.id]=p;});
+
+  try{
+    await set(ref(db,'properties'),propsObj);
+    msgEl.textContent='✅ '+name+' added to route at position #'+order;
+    msgEl.className='form-msg-ok';
+    document.getElementById('new-name').value='';
+    document.getElementById('new-addr').value='';
+    document.getElementById('new-lat').value='';
+    document.getElementById('new-lng').value='';
+    document.getElementById('new-order').value='';
+    renderClientTable();
+  }catch(e){
+    msgEl.textContent='Error saving: '+e.message;
+    msgEl.className='form-msg-err';
+  }
+};
+
+window.removeClient=async function(id){
+  const prop=PROPERTIES.find(p=>p.id===id);
+  if(!prop)return;
+  if(!confirm('Remove "'+prop.name+'" ('+prop.addr+') from the route?'))return;
+
+  PROPERTIES=PROPERTIES.filter(p=>p.id!==id);
+  const propsObj={};
+  PROPERTIES.forEach(p=>{propsObj[p.id]=p;});
+
+  try{
+    await set(ref(db,'properties'),propsObj);
+    // Also remove from completed if present
+    remove(ref(db,'completed/'+id));
+    renderClientTable();
+    document.getElementById('client-count').textContent=PROPERTIES.length;
+  }catch(e){
+    alert('Error removing client: '+e.message);
+  }
+};
+
+window.renderClientTable=function(){
+  const q=(document.getElementById('search-clients').value||'').toLowerCase();
+  const filtered=PROPERTIES.filter(p=>p.name.toLowerCase().includes(q)||p.addr.toLowerCase().includes(q));
+  document.getElementById('client-count').textContent=PROPERTIES.length;
+  const tbody=document.getElementById('client-tbody');
+  tbody.innerHTML='';
+  filtered.sort((a,b)=>a.order-b.order).forEach(p=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td><span class="order-badge">#'+p.order+'</span></td><td><b>'+p.name+'</b></td><td style="color:#90caf9;">'+p.addr+'</td><td style="color:#78909c;font-size:11px;">'+p.lat.toFixed(5)+', '+p.lng.toFixed(5)+'</td><td><button class="remove-btn" onclick="removeClient(''+p.id+'')">Remove</button></td>';
+    tbody.appendChild(tr);
+  });
+};
 </script>
 </body>
 </html>
