@@ -83,7 +83,6 @@
   </style>
 </head>
 <body>
-
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">&#10052;</div>
@@ -140,7 +139,7 @@
       </div>
     </div>
     <div id="reset-section">
-      <button class="btn btn-red" style="max-width:200px;" id="reset-btn">Reset All Progress</button>
+      <button class="btn btn-red" style="max-width:220px;" id="reset-btn">Reset All Progress</button>
     </div>
   </div>
   <div id="tab-clients">
@@ -176,15 +175,14 @@
     <div class="section-title">Current Clients (<span id="client-count">0</span>)</div>
     <input type="text" id="search-clients" placeholder="Search clients by name or address..."/>
     <table id="client-table">
-      <thead><tr><th>#</th><th>Name</th><th>Address</th><th>Coords</th><th>Action</th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Address</th><th>Coords</th><th>Status</th><th>Action</th></tr></thead>
       <tbody id="client-tbody"></tbody>
     </table>
   </div>
 </div>
-
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getDatabase,ref,onValue,remove,set,get}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import{getDatabase,ref,onValue,remove,set,update,get}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig={apiKey:"AIzaSyDx5L68cyP4UbOnPLSeV8tuAzLg9znBtSE",authDomain:"snow-route-29bc5.firebaseapp.com",databaseURL:"https://snow-route-29bc5-default-rtdb.firebaseio.com",projectId:"snow-route-29bc5",storageBucket:"snow-route-29bc5.firebasestorage.app",messagingSenderId:"428738240151",appId:"1:428738240151:web:e71f764adaebe4ea73d3d2"};
@@ -256,8 +254,9 @@ const DEFAULT_PROPERTIES=[
 
 let PROPERTIES=[...DEFAULT_PROPERTIES];
 let map,initialized=false;
+let markerMap={};
 
-// AUTH
+// ── EVENT LISTENERS ────────────────────────────────────────────────
 document.getElementById("login-btn").addEventListener("click",doLogin);
 document.getElementById("login-password").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
 document.getElementById("login-email").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
@@ -268,6 +267,7 @@ document.getElementById("search-clients").addEventListener("input",renderClientT
 document.getElementById("tab-btn-dashboard").addEventListener("click",function(){switchTab("dashboard");});
 document.getElementById("tab-btn-clients").addEventListener("click",function(){switchTab("clients");});
 
+// ── AUTH ───────────────────────────────────────────────────────────
 async function doLogin(){
   var email=document.getElementById("login-email").value.trim();
   var pwd=document.getElementById("login-password").value;
@@ -292,6 +292,7 @@ onAuthStateChanged(auth,function(user){
   }
 });
 
+// ── TAB NAV ────────────────────────────────────────────────────────
 function switchTab(tab){
   document.getElementById("tab-dashboard").style.display=tab==="dashboard"?"block":"none";
   document.getElementById("tab-clients").style.display=tab==="clients"?"block":"none";
@@ -300,27 +301,52 @@ function switchTab(tab){
   if(tab==="clients")renderClientTable();
 }
 
+// ── INIT ───────────────────────────────────────────────────────────
 function initApp(){
   map=L.map("map").setView([45.035,-79.315],13);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OpenStreetMap"}).addTo(map);
-  get(ref(db,"properties")).then(function(snap){
-    if(snap.exists()){
-      PROPERTIES=Object.values(snap.val()).sort(function(a,b){return a.order-b.order;});
-    }
-    startListening();
-  }).catch(function(){startListening();});
+  startListening();
 }
 
+// ── SYNC: Listen to route/properties for completions ──────────────
+// This is the SAME path the operator app writes to
 function startListening(){
+  // Add property markers to map
   PROPERTIES.forEach(function(p){
     var icon=L.divIcon({className:"",html:"<div style='background:#c62828;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;border:2px solid #fff;'>"+p.order+"</div>",iconSize:[26,26],iconAnchor:[13,13]});
-    L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup("<b>"+p.order+". "+p.name+"</b><br/>"+p.addr);
+    var marker=L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup("<b>"+p.order+". "+p.name+"</b><br/>"+p.addr);
+    markerMap[p.id]=marker;
   });
-  onValue(ref(db,"completed"),function(snap){
+
+  // FIXED: Listen to route/properties (operator writes {done:true, completedBy, completedAt} here)
+  onValue(ref(db,"route/properties"),function(snap){
     var data=snap.val()||{};
-    var done=new Set(Object.keys(data));
     var total=PROPERTIES.length;
-    var doneCount=PROPERTIES.filter(function(p){return done.has(p.id);}).length;
+    var doneCount=0;
+    var doneList=document.getElementById("done-list");
+    var todoList=document.getElementById("todo-list");
+    doneList.innerHTML="";todoList.innerHTML="";
+
+    PROPERTIES.forEach(function(p){
+      var entry=data[p.id]||{};
+      var isDone=entry.done===true;
+      if(isDone)doneCount++;
+
+      // Update marker color on map
+      var newColor=isDone?"#2e7d32":"#c62828";
+      if(markerMap[p.id]){
+        var iconHtml="<div style='background:"+newColor+";color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;border:2px solid #fff;'>"+p.order+"</div>";
+        markerMap[p.id].setIcon(L.divIcon({className:"",html:iconHtml,iconSize:[26,26],iconAnchor:[13,13]}));
+      }
+
+      var by=entry.completedBy?"by "+entry.completedBy:"";
+      var div=document.createElement("div");
+      div.className="list-item";
+      var byHtml=by?"<br/><span style='color:#64b5f6;font-size:11px;'>"+by+"</span>":"";
+      div.innerHTML="<div class='list-num "+(isDone?"done":"todo")+"'>"+p.order+"</div><div><b>"+p.name+"</b><br/><span style='color:#78909c;font-size:11px;'>"+p.addr+"</span>"+byHtml+"</div>";
+      (isDone?doneList:todoList).appendChild(div);
+    });
+
     var pct=total>0?Math.round(doneCount/total*100):0;
     document.getElementById("s-pct").textContent=pct+"%";
     document.getElementById("s-done").textContent=doneCount;
@@ -329,41 +355,42 @@ function startListening(){
     fill.style.width=pct+"%";
     fill.textContent=pct+"%";
     document.getElementById("last-updated").textContent="Updated: "+new Date().toLocaleTimeString();
-    var doneList=document.getElementById("done-list");
-    var todoList=document.getElementById("todo-list");
-    doneList.innerHTML="";todoList.innerHTML="";
-    PROPERTIES.forEach(function(p){
-      var isDone=done.has(p.id);
-      var by=data[p.id]?"by "+data[p.id].operator:"";
-      var div=document.createElement("div");
-      div.className="list-item";
-      var byHtml=by?"<br/><span style='color:#64b5f6;font-size:11px;'>"+by+"</span>":"";
-      div.innerHTML="<div class='list-num "+(isDone?"done":"todo")+"'>"+p.order+"</div><div><b>"+p.name+"</b><br/><span style='color:#78909c;font-size:11px;'>"+p.addr+"</span>"+byHtml+"</div>";
-      (isDone?doneList:todoList).appendChild(div);
-    });
   });
+
+  // FIXED: Listen to operators - show email as display name, not raw UID
   onValue(ref(db,"operators"),function(snap){
     var ops=snap.val()||{};
-    var active=Object.entries(ops).filter(function(e){return e[1].lat&&e[1].lng;});
+    var active=Object.values(ops).filter(function(v){return v.lat&&v.lng;});
     document.getElementById("s-drivers").textContent=active.length;
     var tList=document.getElementById("tractor-list");
     tList.innerHTML="";
-    active.forEach(function(e){
-      var name=e[0];var v=e[1];
+    active.forEach(function(v){
+      var displayName=v.email||"Unknown Operator";
       var d=document.createElement("div");
       d.className="tractor-row";
-      d.innerHTML="<div class='tractor-dot'></div><div><div class='tractor-name'>"+name+"</div><div style='color:#78909c;font-size:11px;'>"+v.lat.toFixed(5)+", "+v.lng.toFixed(5)+"</div></div>";
+      d.innerHTML="<div class='tractor-dot'></div><div><div class='tractor-name'>"+displayName+"</div><div style='color:#78909c;font-size:11px;'>"+v.lat.toFixed(5)+", "+v.lng.toFixed(5)+"</div></div>";
       tList.appendChild(d);
     });
   });
 }
 
+// ── RESET: Clears route/properties (removes done flags) ──────────
 function confirmReset(){
   if(confirm("Reset ALL completed driveways? This cannot be undone.")){
-    remove(ref(db,"completed"));
+    // Remove only done flags, not the whole node (operator may have other data)
+    get(ref(db,"route/properties")).then(function(snap){
+      var data=snap.val()||{};
+      var updates={};
+      Object.keys(data).forEach(function(id){
+        // Remove completion entries (keep any non-completion data)
+        updates["route/properties/"+id]=null;
+      });
+      update(ref(db),updates);
+    });
   }
 }
 
+// ── MANAGE CLIENTS ─────────────────────────────────────────────────
 async function addClient(){
   var name=document.getElementById("new-name").value.trim();
   var addr=document.getElementById("new-addr").value.trim();
@@ -373,30 +400,21 @@ async function addClient(){
   var msgEl=document.getElementById("form-msg");
   if(!name||!addr||isNaN(lat)||isNaN(lng)){
     msgEl.textContent="Please fill in Name, Address, Latitude, and Longitude.";
-    msgEl.className="form-msg-err";
-    return;
+    msgEl.className="form-msg-err";return;
   }
   var maxOrder=PROPERTIES.reduce(function(m,p){return Math.max(m,p.order);},0);
   var order=orderInput&&!isNaN(parseInt(orderInput))?parseInt(orderInput):maxOrder+1;
   var id="p"+Date.now();
   PROPERTIES.push({id:id,order:order,name:name,addr:addr,lat:lat,lng:lng});
   PROPERTIES.sort(function(a,b){return a.order-b.order;});
-  var propsObj={};
-  PROPERTIES.forEach(function(p){propsObj[p.id]=p;});
-  try{
-    await set(ref(db,"properties"),propsObj);
-    msgEl.textContent="Added "+name+" to route at position #"+order;
-    msgEl.className="form-msg-ok";
-    document.getElementById("new-name").value="";
-    document.getElementById("new-addr").value="";
-    document.getElementById("new-lat").value="";
-    document.getElementById("new-lng").value="";
-    document.getElementById("new-order").value="";
-    renderClientTable();
-  }catch(e){
-    msgEl.textContent="Error saving: "+e.message;
-    msgEl.className="form-msg-err";
-  }
+  msgEl.textContent="Added "+name+" (saved in app only - reload operator app to see new client)";
+  msgEl.className="form-msg-ok";
+  document.getElementById("new-name").value="";
+  document.getElementById("new-addr").value="";
+  document.getElementById("new-lat").value="";
+  document.getElementById("new-lng").value="";
+  document.getElementById("new-order").value="";
+  renderClientTable();
 }
 
 function renderClientTable(){
@@ -405,28 +423,27 @@ function renderClientTable(){
   document.getElementById("client-count").textContent=PROPERTIES.length;
   var tbody=document.getElementById("client-tbody");
   tbody.innerHTML="";
-  filtered.sort(function(a,b){return a.order-b.order;}).forEach(function(p){
-    var tr=document.createElement("tr");
-    var td1=document.createElement("td");
-    td1.innerHTML="<span class='order-badge'>#"+p.order+"</span>";
-    var td2=document.createElement("td");
-    td2.innerHTML="<b>"+p.name+"</b>";
-    var td3=document.createElement("td");
-    td3.style.color="#90caf9";
-    td3.textContent=p.addr;
-    var td4=document.createElement("td");
-    td4.style.color="#78909c";
-    td4.style.fontSize="11px";
-    td4.textContent=p.lat.toFixed(5)+", "+p.lng.toFixed(5);
-    var td5=document.createElement("td");
-    var btn=document.createElement("button");
-    btn.className="remove-btn";
-    btn.textContent="Remove";
-    btn.dataset.id=p.id;
-    btn.addEventListener("click",handleRemove);
-    td5.appendChild(btn);
-    tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(td4);tr.appendChild(td5);
-    tbody.appendChild(tr);
+
+  // Get current completion data to show status in table
+  get(ref(db,"route/properties")).then(function(snap){
+    var completionData=snap.val()||{};
+    filtered.sort(function(a,b){return a.order-b.order;}).forEach(function(p){
+      var entry=completionData[p.id]||{};
+      var isDone=entry.done===true;
+      var tr=document.createElement("tr");
+      var td1=document.createElement("td");td1.innerHTML="<span class='order-badge'>#"+p.order+"</span>";
+      var td2=document.createElement("td");td2.innerHTML="<b>"+p.name+"</b>";
+      var td3=document.createElement("td");td3.style.color="#90caf9";td3.textContent=p.addr;
+      var td4=document.createElement("td");td4.style.color="#78909c";td4.style.fontSize="11px";td4.textContent=p.lat.toFixed(5)+", "+p.lng.toFixed(5);
+      var td5=document.createElement("td");
+      td5.innerHTML=isDone?"<span style='color:#66bb6a;font-size:11px;font-weight:bold;'>&#10003; Done</span>":"<span style='color:#ef5350;font-size:11px;'>Pending</span>";
+      var td6=document.createElement("td");
+      var btn=document.createElement("button");btn.className="remove-btn";btn.textContent="Remove";
+      btn.dataset.id=p.id;btn.addEventListener("click",handleRemove);
+      td6.appendChild(btn);
+      tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(td4);tr.appendChild(td5);tr.appendChild(td6);
+      tbody.appendChild(tr);
+    });
   });
 }
 
@@ -436,15 +453,9 @@ async function handleRemove(e){
   if(!prop)return;
   if(!confirm("Remove "+prop.name+" ("+prop.addr+") from the route?"))return;
   PROPERTIES=PROPERTIES.filter(function(p){return p.id!==id;});
-  var propsObj={};
-  PROPERTIES.forEach(function(p){propsObj[p.id]=p;});
-  try{
-    await set(ref(db,"properties"),propsObj);
-    remove(ref(db,"completed/"+id));
-    renderClientTable();
-  }catch(e2){
-    alert("Error removing client: "+e2.message);
-  }
+  // Also remove any completion data for this property
+  remove(ref(db,"route/properties/"+id));
+  renderClientTable();
 }
 </script>
 </body>
