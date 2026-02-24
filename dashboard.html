@@ -301,11 +301,21 @@ function switchTab(tab){
   if(tab==="clients")renderClientTable();
 }
 
-// ── INIT ───────────────────────────────────────────────────────────
+// ── INIT ───────────────────────────────────────────────────────────────────
 function initApp(){
   map=L.map("map").setView([45.035,-79.315],13);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OpenStreetMap"}).addTo(map);
-  startListening();
+  // Load PROPERTIES from Firebase (so dashboard and operator stay in sync)
+  onValue(ref(db,"route/config/properties"),function(snap){
+    var fbProps=snap.val();
+    if(fbProps){
+      PROPERTIES=Object.values(fbProps);
+    } else {
+      savePropertiesToFirebase();
+    }
+    PROPERTIES.sort(function(a,b){return a.order-b.order;});
+    startListening();
+  },{onlyOnce:true});
 }
 
 // ── SYNC: Listen to route/properties for completions ──────────────
@@ -390,6 +400,13 @@ function confirmReset(){
   }
 }
 
+// ── SAVE PROPERTIES TO FIREBASE ──────────────────────────────────────
+function savePropertiesToFirebase(){
+  var obj={};
+  PROPERTIES.forEach(function(p){obj[p.id]=p;});
+  set(ref(db,"route/config/properties"),obj);
+}
+
 // ── MANAGE CLIENTS ─────────────────────────────────────────────────
 async function addClient(){
   var name=document.getElementById("new-name").value.trim();
@@ -411,7 +428,8 @@ async function addClient(){
   var id="p"+Date.now();
   PROPERTIES.push({id:id,order:order,name:name,addr:addr,lat:lat,lng:lng});
   PROPERTIES.sort(function(a,b){return a.order-b.order;});
-  msgEl.textContent="Added "+name+" (saved in app only - reload operator app to see new client)";
+  savePropertiesToFirebase();
+  msgEl.textContent="Added "+name+" — route updated for all operators.";
   msgEl.className="form-msg-ok";
   document.getElementById("new-name").value="";
   document.getElementById("new-addr").value="";
@@ -459,6 +477,8 @@ async function handleRemove(e){
   PROPERTIES=PROPERTIES.filter(function(p){return p.id!==id;});
   // Re-number remaining properties sequentially
   PROPERTIES.sort(function(a,b){return a.order-b.order;}).forEach(function(p,i){p.order=i+1;});
+  // Save updated property list to Firebase so operator app syncs
+  savePropertiesToFirebase();
   // Also remove any completion data for this property
   remove(ref(db,"route/properties/"+id));
   renderClientTable();
