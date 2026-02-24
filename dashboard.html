@@ -404,6 +404,10 @@ async function addClient(){
   }
   var maxOrder=PROPERTIES.reduce(function(m,p){return Math.max(m,p.order);},0);
   var order=orderInput&&!isNaN(parseInt(orderInput))?parseInt(orderInput):maxOrder+1;
+  // If a specific slot was chosen, shift all existing properties at that slot and above up by 1
+  if(orderInput&&!isNaN(parseInt(orderInput))){
+    PROPERTIES.forEach(function(p){if(p.order>=order)p.order++;});
+  }
   var id="p"+Date.now();
   PROPERTIES.push({id:id,order:order,name:name,addr:addr,lat:lat,lng:lng});
   PROPERTIES.sort(function(a,b){return a.order-b.order;});
@@ -453,6 +457,8 @@ async function handleRemove(e){
   if(!prop)return;
   if(!confirm("Remove "+prop.name+" ("+prop.addr+") from the route?"))return;
   PROPERTIES=PROPERTIES.filter(function(p){return p.id!==id;});
+  // Re-number remaining properties sequentially
+  PROPERTIES.sort(function(a,b){return a.order-b.order;}).forEach(function(p,i){p.order=i+1;});
   // Also remove any completion data for this property
   remove(ref(db,"route/properties/"+id));
   renderClientTable();
