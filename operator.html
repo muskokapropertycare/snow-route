@@ -45,7 +45,7 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;height:100dvh;di
 </head>
 <body>
 <div id="login-screen">
-  <div class="app-logo">SNOW</div>
+  <div class="app-logo">&#10052;</div>
   <div class="app-title">Snow Route</div>
   <div class="app-sub">Driver Sign In</div>
   <div class="field"><label>Email</label><input type="email" id="inp-email" placeholder="you@example.com" autocomplete="email"/></div>
@@ -55,7 +55,7 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;height:100dvh;di
 </div>
 <div id="app-screen">
   <div id="topbar">
-    <h1>Snow Route</h1>
+    <h1>&#10052; Snow Route</h1>
     <div class="right"><span id="driver-label"></span><button class="btn btn-gray btn-sm" id="signout-btn">Sign Out</button></div>
   </div>
   <div id="statusbar"><span id="prog-text">Loading...</span><span id="gps-text">Acquiring GPS...</span></div>
@@ -79,9 +79,10 @@ const firebaseConfig={
 };
 
 let PROPERTIES=[];
-
 const fbApp=initializeApp(firebaseConfig),auth=getAuth(fbApp),db=getDatabase(fbApp);
 let map,myDot,markers={},routeData={},gpsWatchId=null,currentUser=null;
+let operatorKey=null; // The key in route/config/operators that matches this user
+let routeListener=null,configListener=null;
 
 onAuthStateChanged(auth,user=>{
   if(user){
@@ -90,13 +91,16 @@ onAuthStateChanged(auth,user=>{
     document.getElementById('app-screen').style.display='flex';
     document.getElementById('driver-label').textContent=user.email.split('@')[0];
     if(!map)initMap();
-    // Load route config (properties) from Firebase, then start listening
-    loadPropertiesAndStart();
+    loadOperatorRouteAndStart();
   }else{
     currentUser=null;
     document.getElementById('login-screen').style.display='flex';
     document.getElementById('app-screen').style.display='none';
     if(gpsWatchId!==null){navigator.geolocation.clearWatch(gpsWatchId);gpsWatchId=null;}
+    // Detach listeners
+    if(routeListener){routeListener();routeListener=null;}
+    if(configListener){configListener();configListener=null;}
+    PROPERTIES=[];routeData={};operatorKey=null;markers={};
   }
 });
 
@@ -109,13 +113,7 @@ async function doLogin(){
   try{
     await signInWithEmailAndPassword(auth,email,pass);
   }catch(e){
-    const msgs={
-      'auth/invalid-credential':'Wrong email or password.',
-      'auth/user-not-found':'No account found.',
-      'auth/wrong-password':'Incorrect password.',
-      'auth/invalid-email':'Invalid email.',
-      'auth/too-many-requests':'Too many attempts.'
-    };
+    const msgs={'auth/invalid-credential':'Wrong email or password.','auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/invalid-email':'Invalid email.','auth/too-many-requests':'Too many attempts.'};
     errEl.textContent=msgs[e.code]||'Sign in failed. ('+e.code+')';
   }
 }
@@ -129,22 +127,89 @@ function initMap(){
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(map);
 }
 
-function loadPropertiesAndStart(){
-  onValue(ref(db,'route/config/properties'),function(snap){
-    var fbProps=snap.val();
-    if(fbProps){
-      PROPERTIES=Object.values(fbProps).sort(function(a,b){return a.order-b.order;});
+// Load this operator's specific route from route/config/operatorRoutes/{operatorKey}
+// operatorKey is found by matching the logged-in email to route/config/operators
+function loadOperatorRouteAndStart(){
+  document.getElementById('prog-text').textContent='Loading route...';
+  
+  // First find which operator key matches this user's email
+  configListener=onValue(ref(db,'route/config/operators'),function(snap){
+    var operators=snap.val()||{};
+    var userEmail=currentUser?currentUser.email:'';
+    operatorKey=null;
+    
+    // Match by email
+    Object.entries(operators).forEach(function(entry){
+      if(entry[1].email===userEmail)operatorKey=entry[0];
+    });
+
+    if(operatorKey){
+      // Load this operator's assigned route from route/config/operatorRoutes/{operatorKey}
+      onValue(ref(db,'route/config/operatorRoutes/'+operatorKey),function(routeSnap){
+        var routeProps=routeSnap.val();
+        if(routeProps&&Object.keys(routeProps).length>0){
+          PROPERTIES=Object.values(routeProps).sort(function(a,b){return a.order-b.order;});
+        } else {
+          // No route assigned yet
+          PROPERTIES=[];
+          document.getElementById('prog-text').textContent='No route assigned yet';
+        }
+        // Rebuild markers for new property list
+        rebuildMapMarkers();
+        listenRoute();
+        startGPS();
+      },{onlyOnce:true});
+    } else {
+      // Operator not registered in dashboard yet - fall back to full list
+      onValue(ref(db,'route/config/properties'),function(snap){
+        var fbProps=snap.val();
+        if(fbProps){
+          PROPERTIES=Object.values(fbProps).sort(function(a,b){return a.order-b.order;});
+        } else {
+          PROPERTIES=[];
+        }
+        rebuildMapMarkers();
+        listenRoute();
+        startGPS();
+      },{onlyOnce:true});
     }
-    // If no Firebase data yet, PROPERTIES stays [] and operator sees empty route
-    // (dashboard will seed Firebase on first login)
-    listenRoute();
-    startGPS();
   },{onlyOnce:true});
 }
+
+function rebuildMapMarkers(){
+  // Remove old markers
+  Object.values(markers).forEach(function(m){map.removeLayer(m);});
+  markers={};
+  PROPERTIES.forEach(function(p){
+    const done=isDone(p.id);
+    const m=L.marker([p.lat,p.lng],{icon:markerIcon(p.order,done)}).addTo(map)
+      .bindPopup('<b>#'+p.order+' - '+p.name+'</b><br>'+p.addr+'<br>'+(done?'&#10003; Done':'Pending'));
+    if(!done)m.on('click',()=>markDone(p.id));
+    markers[p.id]=m;
+  });
+}
+
+// Listen to this operator's progress bucket: route/operatorProgress/{operatorKey}
 function listenRoute(){
-  onValue(ref(db,'route/properties'),snap=>{
+  // Determine the progress path
+  var progressPath=operatorKey?('route/operatorProgress/'+operatorKey):'route/operatorProgress/__unassigned__';
+  
+  if(routeListener){routeListener();routeListener=null;}
+  
+  routeListener=onValue(ref(db,progressPath),snap=>{
     routeData=snap.val()||{};
-    renderMarkers();
+    
+    // Update markers
+    PROPERTIES.forEach(function(p){
+      const done=isDone(p.id);
+      if(markers[p.id]){
+        markers[p.id].setIcon(markerIcon(p.order,done));
+        markers[p.id].setPopupContent('<b>#'+p.order+' - '+p.name+'</b><br>'+p.addr+'<br>'+(done?'&#10003; Done':'Pending'));
+        markers[p.id].off('click');
+        if(!done)markers[p.id].on('click',()=>markDone(p.id));
+      }
+    });
+    
     renderList();
     renderProgress();
   });
@@ -156,20 +221,9 @@ function markerIcon(order,done){
   const bg=done?'#2e7d32':'#c62828';
   return L.divIcon({
     className:'',
-    html:'<div style="background:'+bg+';width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:12px;">'+order+'</div>',
+    html:'<div style="background:'+bg+';width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:12px;"+(done?";opacity:0.7":"")+'>'+order+'</div>',
     iconSize:[30,30],
     iconAnchor:[15,15]
-  });
-}
-
-function renderMarkers(){
-  PROPERTIES.forEach(p=>{
-    const done=isDone(p.id);
-    if(markers[p.id])map.removeLayer(markers[p.id]);
-    const m=L.marker([p.lat,p.lng],{icon:markerIcon(p.order,done)}).addTo(map)
-      .bindPopup('<b>#'+p.order+' - '+p.name+'</b><br>'+p.addr+'<br>'+(done?'Done':'Pending'));
-    if(!done)m.on('click',()=>markDone(p.id));
-    markers[p.id]=m;
   });
 }
 
@@ -213,7 +267,9 @@ async function markDone(id){
   const p=PROPERTIES.find(x=>x.id===id);
   if(!p||isDone(id))return;
   if(!confirm('Mark Stop #'+p.order+' "'+p.name+'" as complete?'))return;
-  await update(ref(db,'route/properties/'+id),{
+  // Write to route/operatorProgress/{operatorKey}/{propId}
+  var progressPath=operatorKey?('route/operatorProgress/'+operatorKey+'/'):'route/operatorProgress/__unassigned__/';
+  await update(ref(db,progressPath+id),{
     done:true,
     completedBy:currentUser?currentUser.email:'unknown',
     completedAt:serverTimestamp()
