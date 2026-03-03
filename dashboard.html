@@ -51,7 +51,6 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh
 .tractor-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1a3a6b;font-size:13px;}
 .tractor-dot{width:12px;height:12px;border-radius:50%;background:#1565c0;flex-shrink:0;}
 .tractor-name{font-weight:bold;}
-/* Operator cards */
 #operators-section{padding:14px 16px;background:#0a1628;border-top:2px solid #1a3a6b;}
 #operators-section h2{font-size:13px;text-transform:uppercase;color:#90caf9;letter-spacing:.5px;margin-bottom:12px;}
 .operator-card{background:#0d2040;border-radius:12px;border:1px solid #1a3a6b;margin-bottom:14px;overflow:hidden;}
@@ -60,7 +59,7 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh
 .operator-card-stats{font-size:12px;color:#ccc;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
 .operator-pbar-wrap{padding:6px 14px 2px;background:#0d2040;}
 .operator-pbar-bg{background:#1a3a6b;border-radius:6px;height:10px;overflow:hidden;}
-.operator-pbar-fill{background:linear-gradient(90deg,#1565c0,#2e7d32);height:100%;border-radius:6px;transition:width .5s;}
+.operator-pbar-fill{height:100%;border-radius:6px;transition:width .5s;}
 .operator-lists{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:8px 14px 10px;}
 .list-section h3{font-size:11px;text-transform:uppercase;color:#90caf9;letter-spacing:.5px;margin-bottom:8px;}
 .list-item{display:flex;align-items:flex-start;gap:7px;padding:5px 0;border-bottom:1px solid #1a3a6b;font-size:12px;}
@@ -69,12 +68,10 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh
 .list-num.todo{background:#c62828;}
 .operator-card-footer{padding:8px 14px 12px;display:flex;gap:8px;flex-wrap:wrap;}
 #reset-section{padding:14px 16px;background:#0a1628;border-top:2px solid #1a3a6b;}
-/* Clients tab */
 #tab-clients{display:none;padding:16px;}
 .section-title{font-size:16px;font-weight:bold;color:#90caf9;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #1a3a6b;}
 .add-client-form{background:#0d2040;border-radius:12px;padding:16px;margin-bottom:20px;border:1px solid #1a3a6b;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
 .form-row-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
 .form-field label{display:block;font-size:11px;color:#90caf9;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
 .form-field input,.form-field select{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid #1a3a6b;background:#0a1628;color:#fff;font-size:14px;outline:none;transition:border-color .2s;}
@@ -96,12 +93,34 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh
 .operator-badge{border-radius:6px;padding:2px 8px;font-size:11px;font-weight:bold;color:#fff;}
 #search-clients{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid #1a3a6b;background:#0d2040;color:#fff;font-size:14px;outline:none;margin-bottom:14px;}
 #search-clients:focus{border-color:#1565c0;}
-/* Operators management tab */
-#tab-operators{display:none;padding:16px;}
-.operator-mgmt-card{background:#0d2040;border-radius:12px;border:1px solid #1a3a6b;padding:14px;margin-bottom:14px;}
-.operator-mgmt-card h3{font-size:14px;font-weight:bold;color:#90caf9;margin-bottom:4px;}
-.operator-mgmt-card .op-email{font-size:12px;color:#78909c;margin-bottom:8px;}
-.operator-color{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+#tab-routes{display:none;padding:16px;}
+.routes-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+@media(max-width:900px){.routes-layout{grid-template-columns:1fr;}}
+.unassigned-pool{background:#0d2040;border-radius:12px;border:1px solid #1a3a6b;padding:14px;}
+.unassigned-pool h3{font-size:13px;text-transform:uppercase;color:#90caf9;letter-spacing:.5px;margin-bottom:10px;}
+.operator-route-col{background:#0d2040;border-radius:12px;border:1px solid #1a3a6b;padding:14px;margin-bottom:14px;}
+.operator-route-col h3{font-size:14px;font-weight:bold;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.op-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;display:inline-block;}
+.op-sub{font-size:11px;color:#78909c;margin-bottom:10px;}
+.route-drop-zone{min-height:50px;border:2px dashed #1a3a6b;border-radius:8px;padding:6px;background:#0a1628;}
+.route-drop-zone.drag-over{border-color:#1565c0;background:#0d2040;}
+.route-item{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:7px;background:#1a3a6b;margin-bottom:5px;font-size:12px;cursor:grab;user-select:none;gap:8px;}
+.route-item:hover{background:#1e4a8a;}
+.route-item-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.route-item-num{width:22px;height:22px;border-radius:50%;background:#0a1628;color:#90caf9;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;flex-shrink:0;}
+.route-item-name{font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.route-item-addr{font-size:10px;color:#78909c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.unassign-btn{background:none;border:1px solid #ef5350;color:#ef5350;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:bold;cursor:pointer;flex-shrink:0;}
+.unassign-btn:hover{background:#ef5350;color:#fff;}
+.assign-select{background:#0a1628;color:#fff;border:1px solid #1a3a6b;border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer;flex-shrink:0;}
+.save-routes-bar{position:sticky;bottom:0;background:#0d2040;border-top:2px solid #1565c0;padding:12px 16px;display:flex;align-items:center;gap:14px;margin-top:16px;}
+#save-routes-msg{font-size:13px;}
+.op-route-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.op-count-badge{font-size:11px;color:#90caf9;background:#0a1628;border-radius:6px;padding:2px 8px;}
+#routes-search{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid #1a3a6b;background:#0d2040;color:#fff;font-size:14px;outline:none;margin-bottom:14px;}
+#routes-search:focus{border-color:#1565c0;}
+.operator-mgmt-info{background:#0d2040;border-radius:10px;border:1px solid #1a3a6b;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#90caf9;line-height:1.6;}
+.operator-mgmt-info b{color:#fff;}
 </style>
 </head>
 <body>
@@ -127,7 +146,7 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh
   <div id="nav-tabs">
     <div class="nav-tab active" id="tab-btn-dashboard">&#128202; Live Dashboard</div>
     <div class="nav-tab" id="tab-btn-clients">&#128203; Manage Clients</div>
-    <div class="nav-tab" id="tab-btn-operators">&#128101; Operators</div>
+    <div class="nav-tab" id="tab-btn-routes">&#128661; Routes</div>
   </div>
   <!-- DASHBOARD TAB -->
   <div id="tab-dashboard">
@@ -137,22 +156,13 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh
       <div class="stat"><div class="stat-label">Remaining</div><div class="stat-value red" id="s-left">0</div></div>
       <div class="stat"><div class="stat-label">Active Drivers</div><div class="stat-value blue" id="s-drivers">0</div></div>
     </div>
-    <div id="pbar-wrap">
-      <div id="pbar-bg"><div id="pbar-fill" style="width:0%">0%</div></div>
-    </div>
+    <div id="pbar-wrap"><div id="pbar-bg"><div id="pbar-fill" style="width:0%">0%</div></div></div>
     <div id="map"></div>
-    <div id="tractors-section">
-      <h2>Live Tractor Positions</h2>
-      <div id="tractor-list"></div>
-    </div>
-    <div id="operators-section">
-      <h2>Operator Routes</h2>
-      <div id="operator-cards"></div>
-    </div>
-    <div id="reset-section">
-      <button class="btn btn-red" style="max-width:240px;" id="reset-all-btn">&#9888; Reset All Operators</button>
-    </div>
+    <div id="tractors-section"><h2>Live Tractor Positions</h2><div id="tractor-list"></div></div>
+    <div id="operators-section"><h2>Operator Routes</h2><div id="operator-cards"></div></div>
+    <div id="reset-section"><button class="btn btn-red" style="max-width:240px;" id="reset-all-btn">&#9888; Reset All Operators</button></div>
   </div>
+
   <!-- CLIENTS TAB -->
   <div id="tab-clients">
     <div class="section-title">Add New Client</div>
@@ -177,36 +187,38 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh
       <tbody id="client-tbody"></tbody>
     </table>
   </div>
-  <!-- OPERATORS TAB -->
-  <div id="tab-operators">
-    <div class="section-title">Registered Operators</div>
-    <div id="operator-mgmt-list"></div>
-    <div class="section-title" style="margin-top:20px;">Add Operator</div>
-    <div class="add-client-form">
-      <div class="form-row">
-        <div class="form-field"><label>Operator Email *</label><input type="email" id="new-op-email" placeholder="operator@example.com"/></div>
-        <div class="form-field"><label>Display Name *</label><input type="text" id="new-op-name" placeholder="e.g. Driver 1"/></div>
+  <!-- ROUTES TAB -->
+  <div id="tab-routes">
+    <div class="section-title">Assign Routes to Operators</div>
+    <div class="operator-mgmt-info">
+      <b>How it works:</b> Operators are managed directly in the Firebase Console. Once you have added an operator in Firebase Auth, their account will appear here automatically (matched by email). Use this tab to drag clients into each operator&#39;s route, or use the quick-assign dropdown on each stop. Click <b>Save Routes</b> when done &mdash; changes are pushed live to all operator apps immediately.
+    </div>
+    <input type="text" id="routes-search" placeholder="Search clients to find &amp; assign..."/>
+    <div class="routes-layout">
+      <div>
+        <div class="unassigned-pool">
+          <h3>&#128204; Unassigned Stops (<span id="unassigned-count">0</span>)</h3>
+          <div class="route-drop-zone" id="drop-unassigned"></div>
+        </div>
       </div>
-      <div class="form-row">
-        <div class="form-field"><label>Color (for map)</label><input type="color" id="new-op-color" value="#1565c0"/></div>
-        <div class="form-field"><label>Login Password *</label><input type="password" id="new-op-password" placeholder="Set operator password" autocomplete="new-password"/></div>
-      </div>
-      <button class="btn-add btn-green" id="add-op-btn">Register Operator</button>
-      <div id="op-form-msg"></div>
+      <div id="operator-route-cols"></div>
+    </div>
+    <div class="save-routes-bar">
+      <button class="btn-add btn-green" id="save-routes-btn">&#10003; Save Routes</button>
+      <span id="save-routes-msg"></span>
     </div>
   </div>
-</div>
+
+</div><!-- end app-screen -->
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getDatabase,ref,onValue,remove,set,update,get,push}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import{getDatabase,ref,onValue,set,get,update}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
 const firebaseConfig={apiKey:"AIzaSyDx5L68cyP4UbOnPLSeV8tuAzLg9znBtSE",authDomain:"snow-route-29bc5.firebaseapp.com",databaseURL:"https://snow-route-29bc5-default-rtdb.firebaseio.com",projectId:"snow-route-29bc5",storageBucket:"snow-route-29bc5.firebasestorage.app",messagingSenderId:"428738240151",appId:"1:428738240151:web:e71f764adaebe4ea73d3d2"};
 const fbApp=initializeApp(firebaseConfig);
 const db=getDatabase(fbApp);
 const auth=getAuth(fbApp);
 
-// Default full property list (fallback if Firebase empty)
 const DEFAULT_PROPERTIES=[
   {id:"p1",order:1,name:"Mini Storage",addr:"1711 Winhara Rd, Bracebridge ON",lat:44.992892,lng:-79.309460,operator:""},
   {id:"p2",order:2,name:"Flo",addr:"5 Memory Lane, Bracebridge ON",lat:45.010375,lng:-79.305802,operator:""},
@@ -217,65 +229,17 @@ const DEFAULT_PROPERTIES=[
   {id:"p7",order:7,name:"Rivers Edge Condos",addr:"Rivers Edge Condos, Bracebridge ON",lat:45.039500,lng:-79.314000,operator:""},
   {id:"p8",order:8,name:"Nordeman",addr:"90 Milton St, Bracebridge ON",lat:45.034200,lng:-79.306000,operator:""},
   {id:"p9",order:9,name:"Cathy",addr:"127 Milton St, Bracebridge ON",lat:45.033716,lng:-79.305500,operator:""},
-  {id:"p10",order:10,name:"Nordeman 2 driveways",addr:"3 King St, Bracebridge ON",lat:45.039200,lng:-79.304600,operator:""},
-  {id:"p11",order:11,name:"Erik",addr:"33 King St, Bracebridge ON",lat:45.039400,lng:-79.304800,operator:""},
-  {id:"p12",order:12,name:"Nordeman",addr:"619 Cedar Lane, Bracebridge ON",lat:45.064500,lng:-79.304100,operator:""},
-  {id:"p13",order:13,name:"Rhonda",addr:"120 Ann St, Bracebridge ON",lat:45.046900,lng:-79.310100,operator:""},
-  {id:"p14",order:14,name:"Karen",addr:"12 Church St, Bracebridge ON",lat:45.038035,lng:-79.313461,operator:""},
-  {id:"p15",order:15,name:"Tony",addr:"126 Holditch St, Bracebridge ON",lat:45.034379,lng:-79.315852,operator:""},
-  {id:"p16",order:16,name:"Wellington Apts 37/39",addr:"37 Wellington St, Bracebridge ON",lat:45.040341,lng:-79.320011,operator:""},
-  {id:"p17",order:17,name:"Wellington Apts 94",addr:"94 Wellington St, Bracebridge ON",lat:45.042517,lng:-79.322305,operator:""},
-  {id:"p18",order:18,name:"Verla",addr:"59 Santas Village Rd, Bracebridge ON",lat:45.023742,lng:-79.358715,operator:""},
-  {id:"p19",order:19,name:"Lady 1",addr:"19 Gainsborough, Bracebridge ON",lat:45.031620,lng:-79.324650,operator:""},
-  {id:"p20",order:20,name:"Joe",addr:"16 Gainsborough, Bracebridge ON",lat:45.031750,lng:-79.324750,operator:""},
-  {id:"p21",order:21,name:"Lady 2",addr:"17 Gainsborough, Bracebridge ON",lat:45.031880,lng:-79.324850,operator:""},
-  {id:"p22",order:22,name:"Hough",addr:"23 Gainsborough, Bracebridge ON",lat:45.032100,lng:-79.325050,operator:""},
-  {id:"p23",order:23,name:"Anne Swan",addr:"1A MacArthur Dr, Bracebridge ON",lat:45.032074,lng:-79.328087,operator:""},
-  {id:"p24",order:24,name:"53 Ewing",addr:"53 Ewing St, Bracebridge ON",lat:45.034274,lng:-79.320241,operator:""},
-  {id:"p25",order:25,name:"57 Ewing",addr:"57 Ewing St, Bracebridge ON",lat:45.034374,lng:-79.320341,operator:""},
-  {id:"p26",order:26,name:"65 Ewing",addr:"65 Ewing St, Bracebridge ON",lat:45.034474,lng:-79.320441,operator:""},
-  {id:"p27",order:27,name:"91 Ewing",addr:"91 Ewing St, Bracebridge ON",lat:45.034474,lng:-79.320641,operator:""},
-  {id:"p28",order:28,name:"93 Ewing",addr:"93 Ewing St, Bracebridge ON",lat:45.034374,lng:-79.320741,operator:""},
-  {id:"p29",order:29,name:"19 Inveraray",addr:"19 Inveraray Ave, Bracebridge ON",lat:45.038200,lng:-79.322500,operator:""},
-  {id:"p30",order:30,name:"35 Inveraray Crt",addr:"35 Inveraray Crt, Bracebridge ON",lat:45.038400,lng:-79.322700,operator:""},
-  {id:"p31",order:31,name:"47 Inveraray",addr:"47 Inveraray Ave, Bracebridge ON",lat:45.038600,lng:-79.322900,operator:""},
-  {id:"p32",order:32,name:"281 Dill St",addr:"281 Dill St, Bracebridge ON",lat:45.035066,lng:-79.322819,operator:""},
-  {id:"p33",order:33,name:"289 Dill St",addr:"289 Dill St, Bracebridge ON",lat:45.035166,lng:-79.322919,operator:""},
-  {id:"p34",order:34,name:"243 Dill St",addr:"243 Dill St, Bracebridge ON",lat:45.034966,lng:-79.322719,operator:""},
-  {id:"p35",order:35,name:"67 Spencer St",addr:"67 Spencer St, Bracebridge ON",lat:45.038081,lng:-79.320626,operator:""},
-  {id:"p36",order:36,name:"69 Spencer St",addr:"69 Spencer St, Bracebridge ON",lat:45.038200,lng:-79.320696,operator:""},
-  {id:"p37",order:37,name:"11 Andrea Dr",addr:"11 Andrea Dr, Bracebridge ON",lat:45.036852,lng:-79.321854,operator:""},
-  {id:"p38",order:38,name:"Summer",addr:"38 Killdeer, Bracebridge ON",lat:45.047094,lng:-79.333188,operator:""},
-  {id:"p39",order:39,name:"Lindsay",addr:"21 Killdeer, Bracebridge ON",lat:45.047294,lng:-79.333388,operator:""},
-  {id:"p40",order:40,name:"June",addr:"50 Killdeer, Bracebridge ON",lat:45.046894,lng:-79.332988,operator:""},
-  {id:"p41",order:41,name:"31 Fawnbrook",addr:"31 Fawnbrook Cres, Bracebridge ON",lat:45.057878,lng:-79.323654,operator:""},
-  {id:"p42",order:42,name:"31 Hunter Pl",addr:"31 Hunter Place, Bracebridge ON",lat:45.059259,lng:-79.320122,operator:""},
-  {id:"p43",order:43,name:"33 Hunter Pl",addr:"33 Hunter Place, Bracebridge ON",lat:45.059159,lng:-79.320222,operator:""},
-  {id:"p44",order:44,name:"5 Hunter Pl",addr:"5 Hunter Place, Bracebridge ON",lat:45.059359,lng:-79.320322,operator:""},
-  {id:"p45",order:45,name:"21 Browning",addr:"21 Browning Blvd, Bracebridge ON",lat:45.061295,lng:-79.317362,operator:""},
-  {id:"p46",order:46,name:"56 Chamberry",addr:"56 Chamberry, Bracebridge ON",lat:45.061000,lng:-79.319000,operator:""},
-  {id:"p47",order:47,name:"52 Dyer Cres",addr:"52 Dyer Cres, Bracebridge ON",lat:45.060437,lng:-79.314378,operator:""},
-  {id:"p48",order:48,name:"39 Stother",addr:"39 Stother Cres, Bracebridge ON",lat:45.058658,lng:-79.316903,operator:""},
-  {id:"p49",order:49,name:"3 Clearstream",addr:"3 Clearstream Crt, Bracebridge ON",lat:45.064367,lng:-79.321506,operator:""},
-  {id:"p50",order:50,name:"31 Gladys Ave",addr:"31 Gladys Ave, Bracebridge ON",lat:45.065945,lng:-79.326820,operator:""},
-  {id:"p51",order:51,name:"20 Doland St",addr:"20 Doland St, Bracebridge ON",lat:45.063000,lng:-79.323000,operator:""},
-  {id:"p52",order:52,name:"106 Meadow Heights",addr:"106 Meadow Heights Dr, Bracebridge ON",lat:45.055764,lng:-79.339821,operator:""},
-  {id:"p53",order:53,name:"120 Meadow Heights",addr:"120 Meadow Heights Dr, Bracebridge ON",lat:45.055864,lng:-79.339921,operator:""},
-  {id:"p54",order:54,name:"38 Brian Rd",addr:"38 Brian Rd, Bracebridge ON",lat:45.054912,lng:-79.337888,operator:""},
-  {id:"p55",order:55,name:"21 Brian Rd",addr:"21 Brian Rd, Bracebridge ON",lat:45.055012,lng:-79.337988,operator:""},
-  {id:"p56",order:56,name:"11 Daleman Dr",addr:"11 Daleman Dr, Bracebridge ON",lat:45.053811,lng:-79.336569,operator:""},
-  {id:"p57",order:57,name:"72 Glendale Rd",addr:"72 Glendale Rd, Bracebridge ON",lat:45.050225,lng:-79.328401,operator:""},
-  {id:"p58",order:58,name:"22 Kaye Rd",addr:"22 Kaye Rd, Bracebridge ON",lat:45.054339,lng:-79.335000,operator:""}
-];
+  {id:"p10",order:10,name:"Nordeman 2 driveways",addr:"3 King St, Bracebridge ON",lat:45.039200,lng:-79.304600,operator:""}
+]; // (full list loaded from Firebase)
 
-let PROPERTIES=[...DEFAULT_PROPERTIES];
-// operators: {uid: {email, name, color}}
+let PROPERTIES=[];
 let OPERATORS={};
 let map,initialized=false;
 let markerMap={};
+const OP_COLORS=["#1565c0","#e65100","#6a1b9a","#00695c","#ad1457","#f57f17","#1b5e20","#880e4f"];
 
-// Operator colors for map display
-const OP_COLORS=['#1565c0','#e65100','#6a1b9a','#00695c','#ad1457','#f57f17','#1b5e20','#880e4f'];
+// Pending route assignments (before Save)
+let _pendingAssignments=null; // null = not in edit mode, obj = working copy
 
 // ── EVENT LISTENERS ──────────────────────────────────────────────────
 document.getElementById("login-btn").addEventListener("click",doLogin);
@@ -284,13 +248,14 @@ document.getElementById("login-email").addEventListener("keydown",function(e){if
 document.getElementById("signout-btn").addEventListener("click",function(){signOut(auth);});
 document.getElementById("reset-all-btn").addEventListener("click",confirmResetAll);
 document.getElementById("add-btn").addEventListener("click",addClient);
-document.getElementById("add-op-btn").addEventListener("click",addOperator);
 document.getElementById("search-clients").addEventListener("input",renderClientTable);
+document.getElementById("routes-search").addEventListener("input",renderRoutesTab);
+document.getElementById("save-routes-btn").addEventListener("click",saveRoutes);
 document.getElementById("tab-btn-dashboard").addEventListener("click",function(){switchTab("dashboard");});
 document.getElementById("tab-btn-clients").addEventListener("click",function(){switchTab("clients");});
-document.getElementById("tab-btn-operators").addEventListener("click",function(){switchTab("operators");});
+document.getElementById("tab-btn-routes").addEventListener("click",function(){switchTab("routes");});
 
-// ── AUTH ─────────────────────────────────────────────────────────────
+// ── AUTH ───────────────────────────────────────────────────────────────
 async function doLogin(){
   var email=document.getElementById("login-email").value.trim();
   var pwd=document.getElementById("login-password").value;
@@ -303,7 +268,6 @@ async function doLogin(){
     errEl.textContent="Invalid email or password. Please try again.";
   }
 }
-
 onAuthStateChanged(auth,function(user){
   if(user){
     document.getElementById("login-screen").style.display="none";
@@ -315,35 +279,39 @@ onAuthStateChanged(auth,function(user){
   }
 });
 
-// ── TAB NAV ──────────────────────────────────────────────────────────
+// ── TAB NAV ─────────────────────────────────────────────────────────────
 function switchTab(tab){
-  ["dashboard","clients","operators"].forEach(function(t){
+  ["dashboard","clients","routes"].forEach(function(t){
     document.getElementById("tab-"+t).style.display=tab===t?"block":"none";
     document.getElementById("tab-btn-"+t).className="nav-tab"+(tab===t?" active":"");
   });
   if(tab==="clients"){renderClientTable();}
-  if(tab==="operators"){renderOperatorMgmt();}
+  if(tab==="routes"){_pendingAssignments=null;renderRoutesTab();}
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────────────────────────────
 function initApp(){
   map=L.map("map").setView([45.035,-79.315],13);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OpenStreetMap"}).addTo(map);
-  // Load operators first, then properties
+  // Load operators from Firebase Auth user list via config node
+  // Operators register themselves on first login in operator.html;
+  // manager can also manually add them via Firebase console.
+  // We read from route/config/operators (uid -> {email,name,color})
   onValue(ref(db,"route/config/operators"),function(snap){
     OPERATORS=snap.val()||{};
     populateOperatorSelects();
-    renderOperatorMgmt();
+    if(document.getElementById("tab-routes").style.display==="block"){renderRoutesTab();}
   });
   onValue(ref(db,"route/config/properties"),function(snap){
     var fbProps=snap.val();
     if(fbProps){
       PROPERTIES=Object.values(fbProps);
-    } else {
+    }else{
+      // seed with defaults
       savePropertiesToFirebase();
+      return;
     }
     PROPERTIES.sort(function(a,b){return a.order-b.order;});
-    // Add operator field if missing
     PROPERTIES.forEach(function(p){if(!p.operator)p.operator="";});
     startListening();
   },{onlyOnce:true});
@@ -355,18 +323,16 @@ function operatorColor(uid){
   var idx=Object.keys(OPERATORS).indexOf(uid);
   return OP_COLORS[idx%OP_COLORS.length]||"#546e7a";
 }
-
 function operatorName(uid){
   if(!uid)return"Unassigned";
   if(OPERATORS[uid])return OPERATORS[uid].name||OPERATORS[uid].email||uid;
   return uid;
 }
-
 function populateOperatorSelects(){
   var sel=document.getElementById("new-operator");
   if(!sel)return;
   var prev=sel.value;
-  sel.innerHTML='<option value="">-- Unassigned --</option>';
+  sel.innerHTML="<option value=\"\">-- Unassigned --</option>";
   Object.entries(OPERATORS).forEach(function(entry){
     var uid=entry[0],op=entry[1];
     var opt=document.createElement("option");
@@ -377,9 +343,8 @@ function populateOperatorSelects(){
   sel.value=prev;
 }
 
-// ── LISTENING ────────────────────────────────────────────────────────
+// ── LISTENING ──────────────────────────────────────────────────────────
 function startListening(){
-  // Re-draw markers on map
   Object.values(markerMap).forEach(function(m){map.removeLayer(m);});
   markerMap={};
   PROPERTIES.forEach(function(p){
@@ -388,14 +353,10 @@ function startListening(){
     var marker=L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup("<b>"+p.order+". "+p.name+"</b><br/>"+p.addr+"<br/>Operator: "+operatorName(p.operator));
     markerMap[p.id]=marker;
   });
-
-  // Listen to all operator completions
   onValue(ref(db,"route/operatorProgress"),function(snap){
     var allProgress=snap.val()||{};
     updateDashboard(allProgress);
   });
-
-  // Listen to live operator GPS positions
   onValue(ref(db,"operators"),function(snap){
     var ops=snap.val()||{};
     var active=Object.values(ops).filter(function(v){return v.lat&&v.lng;});
@@ -412,29 +373,21 @@ function startListening(){
   });
 }
 
+// ── DASHBOARD UPDATE ──────────────────────────────────────────────────
 function updateDashboard(allProgress){
-  // allProgress = { uid: { propId: {done, completedBy, completedAt}, ... }, ... }
   var totalAll=PROPERTIES.length;
   var doneAll=0;
-
-  // Group properties by operator
   var byOperator={};
-  // include unassigned bucket
   PROPERTIES.forEach(function(p){
     var opKey=p.operator||"__unassigned__";
     if(!byOperator[opKey])byOperator[opKey]=[];
     byOperator[opKey].push(p);
   });
-
-  // Overall stats
   PROPERTIES.forEach(function(p){
     var opKey=p.operator||"__unassigned__";
-    // Find completion: check operator's progress bucket
-    var progress=opKey!=="__unassigned__"?(allProgress[opKey]||{}):(allProgress["__unassigned__"]||{});
-    // Also check legacy route/properties for backward compat
+    var progress=(opKey!=="__unassigned__")?(allProgress[opKey]||{}):(allProgress["__unassigned__"]||{});
     if(progress[p.id]&&progress[p.id].done)doneAll++;
   });
-
   var pct=totalAll>0?Math.round(doneAll/totalAll*100):0;
   document.getElementById("s-pct").textContent=pct+"%";
   document.getElementById("s-done").textContent=doneAll;
@@ -443,11 +396,9 @@ function updateDashboard(allProgress){
   fill.style.width=pct+"%";
   fill.textContent=pct+"%";
   document.getElementById("last-updated").textContent="Updated: "+new Date().toLocaleTimeString();
-
-  // Update map markers
   PROPERTIES.forEach(function(p){
     var opKey=p.operator||"__unassigned__";
-    var progress=opKey!=="__unassigned__"?(allProgress[opKey]||{}):(allProgress["__unassigned__"]||{});
+    var progress=(opKey!=="__unassigned__")?(allProgress[opKey]||{}):(allProgress["__unassigned__"]||{});
     var isDone=progress[p.id]&&progress[p.id].done===true;
     var baseColor=operatorColor(p.operator);
     var markerColor=isDone?"#2e7d32":baseColor;
@@ -456,73 +407,58 @@ function updateDashboard(allProgress){
       markerMap[p.id].setIcon(L.divIcon({className:"",html:iconHtml,iconSize:[26,26],iconAnchor:[13,13]}));
     }
   });
-
-  // Render per-operator cards
   renderOperatorCards(byOperator,allProgress);
 }
 
+// ── OPERATOR CARDS ─────────────────────────────────────────────────────
 function renderOperatorCards(byOperator,allProgress){
   var container=document.getElementById("operator-cards");
   container.innerHTML="";
-
-  // Render registered operators first
   Object.entries(OPERATORS).forEach(function(entry){
     var uid=entry[0],op=entry[1];
     var props=byOperator[uid]||[];
     var progress=allProgress[uid]||{};
     renderOpCard(container,uid,op.name||op.email||uid,op.color||operatorColor(uid),props,progress);
   });
-
-  // Render unassigned if any
   var unassigned=byOperator["__unassigned__"]||[];
   if(unassigned.length>0){
     var progress=allProgress["__unassigned__"]||{};
     renderOpCard(container,"__unassigned__","Unassigned","#546e7a",unassigned,progress);
   }
 }
-
 function renderOpCard(container,uid,name,color,props,progress){
   var total=props.length;
   var doneCount=props.filter(function(p){return progress[p.id]&&progress[p.id].done;}).length;
   var pct=total>0?Math.round(doneCount/total*100):0;
-
   var card=document.createElement("div");
   card.className="operator-card";
-
-  // Header
   var hdr=document.createElement("div");
   hdr.className="operator-card-header";
-  hdr.innerHTML="<div style='display:flex;align-items:center;gap:8px;'><div style='width:14px;height:14px;border-radius:50%;background:"+color+";flex-shrink:0;'></div><div class='operator-card-name'>"+name+"</div></div>"
-    +"<div class='operator-card-stats'>"
-    +"<span style='color:#66bb6a;'>&#10003; "+doneCount+" done</span>"
-    +"<span style='color:#ef5350;'>&#9711; "+(total-doneCount)+" left</span>"
-    +"<span style='color:#90caf9;'>"+pct+"%</span>"
-    +"<span style='color:#78909c;'>"+total+" stops</span>"
+  hdr.innerHTML="<div style='display:flex;align-items:center;gap:8px;'><div style='width:14px;height:14px;border-radius:50%;background:"+color+";flex-shrink:0;'></div><div class=\"operator-card-name\">"+name+"</div></div>"
+    +"<div class=\"operator-card-stats\">"
+    +"<span style=\"color:#66bb6a;\">&#10003; "+doneCount+" done</span>"
+    +"<span style=\"color:#ef5350;\">&#9711; "+(total-doneCount)+" left</span>"
+    +"<span style=\"color:#90caf9;\">"+pct+"%</span>"
+    +"<span style=\"color:#78909c;\">"+total+" stops</span>"
     +"</div>";
   card.appendChild(hdr);
-
-  // Progress bar
   var pbarWrap=document.createElement("div");
   pbarWrap.className="operator-pbar-wrap";
-  pbarWrap.innerHTML="<div class='operator-pbar-bg'><div class='operator-pbar-fill' style='width:"+pct+"%;background:"+color+";'></div></div>";
+  pbarWrap.innerHTML="<div class=\"operator-pbar-bg\"><div class=\"operator-pbar-fill\" style=\"width:"+pct+"%;background:"+color+"\"></div></div>";
   card.appendChild(pbarWrap);
-
-  // Lists
   var lists=document.createElement("div");
   lists.className="operator-lists";
-  var doneHtml="<div class='list-section'><h3>Completed ("+doneCount+")</h3>";
-  var todoHtml="<div class='list-section'><h3>To Do ("+(total-doneCount)+")</h3>";
+  var doneHtml="<div class=\"list-section\"><h3>Completed ("+doneCount+")</h3>";
+  var todoHtml="<div class=\"list-section\"><h3>To Do ("+(total-doneCount)+")</h3>";
   props.forEach(function(p){
     var isDone=progress[p.id]&&progress[p.id].done;
     var by=progress[p.id]&&progress[p.id].completedBy?" by "+progress[p.id].completedBy:"";
-    var itemHtml="<div class='list-item'><div class='list-num "+(isDone?"done":"todo")+"'>"+p.order+"</div><div><b>"+p.name+"</b><br/><span style='color:#78909c;font-size:11px;'>"+p.addr+"</span>"+(by?"<br/><span style='color:#64b5f6;font-size:11px;'>"+by+"</span>":"")+"</div></div>";
+    var itemHtml="<div class=\"list-item\"><div class=\"list-num "+(isDone?"done":"todo")+"\">"+p.order+"</div><div><b>"+p.name+"</b><br/><span style=\"color:#78909c;font-size:11px;\">"+p.addr+"</span>"+(by?"<br/><span style=\"color:#64b5f6;font-size:11px;\">"+by+"</span>":"")+"</div></div>";
     if(isDone)doneHtml+=itemHtml; else todoHtml+=itemHtml;
   });
   doneHtml+="</div>";todoHtml+="</div>";
   lists.innerHTML=doneHtml+todoHtml;
   card.appendChild(lists);
-
-  // Footer with reset button
   var footer=document.createElement("div");
   footer.className="operator-card-footer";
   if(uid!=="__unassigned__"){
@@ -536,32 +472,26 @@ function renderOpCard(container,uid,name,color,props,progress){
   container.appendChild(card);
 }
 
-// ── RESET ─────────────────────────────────────────────────────────────
+// ── RESET ────────────────────────────────────────────────────────────────
 function confirmResetAll(){
   if(confirm("Reset ALL operators' completed driveways? This cannot be undone.")){
-    // Remove entire operatorProgress node
     set(ref(db,"route/operatorProgress"),null);
   }
 }
-
 function confirmResetOperator(uid,name){
   if(confirm("Reset "+name+"'s completed driveways? This cannot be undone.")){
-    // Remove just this operator's progress
     set(ref(db,"route/operatorProgress/"+uid),null);
   }
 }
 
-// ── SAVE PROPERTIES TO FIREBASE ────────────────────────────────────────
+// ── SAVE PROPERTIES TO FIREBASE ──────────────────────────────────────────
 function savePropertiesToFirebase(){
   var obj={};
   PROPERTIES.forEach(function(p){obj[p.id]=p;});
   set(ref(db,"route/config/properties"),obj);
-  // Also rebuild per-operator route slices
   rebuildOperatorRoutes();
 }
-
 function rebuildOperatorRoutes(){
-  // Build per-operator property slices and push to route/config/operatorRoutes/{uid}
   var byOp={};
   PROPERTIES.forEach(function(p){
     var uid=p.operator||"__unassigned__";
@@ -571,7 +501,7 @@ function rebuildOperatorRoutes(){
   set(ref(db,"route/config/operatorRoutes"),byOp);
 }
 
-// ── MANAGE CLIENTS ───────────────────────────────────────────────────
+// ── MANAGE CLIENTS ─────────────────────────────────────────────────────
 async function addClient(){
   var name=document.getElementById("new-name").value.trim();
   var addr=document.getElementById("new-addr").value.trim();
@@ -593,9 +523,9 @@ async function addClient(){
   PROPERTIES.push({id:id,order:order,name:name,addr:addr,lat:lat,lng:lng,operator:operatorUid});
   PROPERTIES.sort(function(a,b){return a.order-b.order;});
   savePropertiesToFirebase();
-  msgEl.textContent="Added "+name+" — route updated for all operators.";
+  msgEl.textContent="Added "+name+" — route updated.";
   msgEl.className="form-msg-ok";
-  ["new-name","new-addr","new-lat","new-lng","new-order"].forEach(function(id){document.getElementById(id).value="";});
+  ["new-name","new-addr","new-lat","new-lng","new-order"].forEach(function(id){document.getElementById(id).value=""});
   document.getElementById("new-operator").value="";
   renderClientTable();
 }
@@ -606,7 +536,6 @@ function renderClientTable(){
   document.getElementById("client-count").textContent=PROPERTIES.length;
   var tbody=document.getElementById("client-tbody");
   tbody.innerHTML="";
-  // Get current completion data
   get(ref(db,"route/operatorProgress")).then(function(snap){
     var allProgress=snap.val()||{};
     filtered.sort(function(a,b){return a.order-b.order;}).forEach(function(p){
@@ -616,23 +545,21 @@ function renderClientTable(){
       var opColor=operatorColor(p.operator);
       var opName=operatorName(p.operator);
       var tr=document.createElement("tr");
-      var td1=document.createElement("td");td1.innerHTML="<span class='order-badge'>#"+p.order+"</span>";
+      var td1=document.createElement("td");td1.innerHTML="<span class=\"order-badge\">#"+p.order+"</span>";
       var td2=document.createElement("td");td2.innerHTML="<b>"+p.name+"</b>";
       var td3=document.createElement("td");td3.style.color="#90caf9";td3.textContent=p.addr;
       var td4=document.createElement("td");
-      td4.innerHTML=p.operator?"<span class='operator-badge' style='background:"+opColor+";'>"+opName+"</span>":"<span style='color:#546e7a;font-size:11px;'>Unassigned</span>";
+      td4.innerHTML=p.operator?"<span class=\"operator-badge\" style=\"background:"+opColor+"\">"+opName+"</span>":"<span style=\"color:#546e7a;font-size:11px;\">Unassigned</span>";
       var td5=document.createElement("td");
-      td5.innerHTML=isDone?"<span style='color:#66bb6a;font-size:11px;font-weight:bold;'>&#10003; Done</span>":"<span style='color:#ef5350;font-size:11px;'>Pending</span>";
+      td5.innerHTML=isDone?"<span style=\"color:#66bb6a;font-size:11px;font-weight:bold;\">&#10003; Done</span>":"<span style=\"color:#ef5350;font-size:11px;\">Pending</span>";
       var td6=document.createElement("td");
-      // Reassign operator dropdown inline
       var sel=document.createElement("select");
       sel.style.cssText="background:#0a1628;color:#fff;border:1px solid #1a3a6b;border-radius:6px;padding:3px 6px;font-size:11px;margin-right:6px;";
-      sel.innerHTML='<option value="">Unassigned</option>';
+      sel.innerHTML="<option value=\"\">Unassigned</option>";
       Object.entries(OPERATORS).forEach(function(entry){
         var uid=entry[0],op=entry[1];
         var opt=document.createElement("option");
-        opt.value=uid;
-        opt.textContent=op.name||op.email||uid;
+        opt.value=uid;opt.textContent=op.name||op.email||uid;
         if(p.operator===uid)opt.selected=true;
         sel.appendChild(opt);
       });
@@ -649,7 +576,6 @@ function renderClientTable(){
     });
   });
 }
-
 async function handleRemove(e){
   var id=e.currentTarget.dataset.id;
   var prop=PROPERTIES.find(function(p){return p.id===id;});
@@ -661,79 +587,161 @@ async function handleRemove(e){
   renderClientTable();
 }
 
-// ── OPERATORS MANAGEMENT ───────────────────────────────────────────────
-function renderOperatorMgmt(){
-  var container=document.getElementById("operator-mgmt-list");
-  container.innerHTML="";
-  if(Object.keys(OPERATORS).length===0){
-    container.innerHTML="<p style='color:#78909c;'>No operators registered yet.</p>";
-    return;
+// ── ROUTES TAB ────────────────────────────────────────────────────────
+// _pendingAssignments: {propId: operatorUid|""}
+// Built fresh each time the tab opens from current PROPERTIES
+
+function renderRoutesTab(){
+  var q=(document.getElementById("routes-search").value||"").toLowerCase();
+  // Init pending assignments from current state if not set
+  if(!_pendingAssignments){
+    _pendingAssignments={};
+    PROPERTIES.forEach(function(p){_pendingAssignments[p.id]=p.operator||"";});
   }
+  // Build operator columns
+  var colContainer=document.getElementById("operator-route-cols");
+  colContainer.innerHTML="";
+  var dropUnassigned=document.getElementById("drop-unassigned");
+  dropUnassigned.innerHTML="";
+  // Get properties filtered by search
+  var filtered=q?PROPERTIES.filter(function(p){
+    return p.name.toLowerCase().includes(q)||p.addr.toLowerCase().includes(q);
+  }):PROPERTIES;
+  // Separate into buckets based on _pendingAssignments
+  var unassigned=[];
+  var byOp={};
+  Object.keys(OPERATORS).forEach(function(uid){byOp[uid]=[];});
+  filtered.forEach(function(p){
+    var assignedTo=_pendingAssignments[p.id]||"";
+    if(!assignedTo||!OPERATORS[assignedTo])unassigned.push(p);
+    else byOp[assignedTo].push(p);
+  });
+  // Update unassigned count
+  var allUnassigned=PROPERTIES.filter(function(p){return !(_pendingAssignments[p.id])||!OPERATORS[_pendingAssignments[p.id]];});
+  document.getElementById("unassigned-count").textContent=allUnassigned.length;
+  // Render unassigned stops
+  unassigned.sort(function(a,b){return a.order-b.order;}).forEach(function(p){
+    dropUnassigned.appendChild(makeRouteItem(p,""));
+  });
+  if(unassigned.length===0){
+    dropUnassigned.innerHTML="<div style=\"color:#546e7a;font-size:12px;padding:8px;text-align:center;\">All stops assigned</div>";
+  }
+  // Setup drag-and-drop on unassigned zone
+  setupDropZone(dropUnassigned,"");
+  // Render operator columns
   Object.entries(OPERATORS).forEach(function(entry){
     var uid=entry[0],op=entry[1];
-    var propCount=PROPERTIES.filter(function(p){return p.operator===uid;}).length;
-    var card=document.createElement("div");
-    card.className="operator-mgmt-card";
-    card.innerHTML="<h3><span class='operator-color' style='background:"+(op.color||operatorColor(uid))+"'></span>"+
-      (op.name||"Unnamed")+"</h3>"+
-      "<div class='op-email'>"+op.email+"</div>"+
-      "<div style='font-size:12px;color:#90caf9;'>"+propCount+" properties assigned</div>";
-    var removeBtn=document.createElement("button");
-    removeBtn.className="btn-sm btn-red";removeBtn.style.marginTop="8px";
-    removeBtn.textContent="Remove Operator";
-    removeBtn.addEventListener("click",function(){
-      if(confirm("Remove operator "+op.name+"? Their properties will become unassigned.")){
-        // Unassign their properties
-        PROPERTIES.forEach(function(p){if(p.operator===uid)p.operator="";});
-        delete OPERATORS[uid];
-        set(ref(db,"route/config/operators"),OPERATORS);
-        savePropertiesToFirebase();
-        populateOperatorSelects();
-        renderOperatorMgmt();
-      }
+    var color=op.color||operatorColor(uid);
+    var props=byOp[uid]||[];
+    var col=document.createElement("div");
+    col.className="operator-route-col";
+    var hdr=document.createElement("div");
+    hdr.className="op-route-header";
+    hdr.innerHTML="<h3><span class=\"op-dot\" style=\"background:"+color+"\"></span>"+(op.name||op.email||uid)+"</h3>"
+      +"<span class=\"op-count-badge\">"+props.length+" stops</span>";
+    col.appendChild(hdr);
+    var sub=document.createElement("div");sub.className="op-sub";sub.textContent=op.email||"";
+    col.appendChild(sub);
+    var zone=document.createElement("div");
+    zone.className="route-drop-zone";
+    zone.dataset.opUid=uid;
+    props.sort(function(a,b){return a.order-b.order;}).forEach(function(p){
+      zone.appendChild(makeRouteItem(p,uid));
     });
-    card.appendChild(removeBtn);
-    container.appendChild(card);
+    if(props.length===0){
+      zone.innerHTML="<div style=\"color:#546e7a;font-size:12px;padding:8px;text-align:center;\">Drop stops here</div>";
+    }
+    setupDropZone(zone,uid);
+    col.appendChild(zone);
+    colContainer.appendChild(col);
+  });
+  if(Object.keys(OPERATORS).length===0){
+    colContainer.innerHTML="<div style=\"color:#78909c;font-size:13px;padding:12px;\">No operators found. Add operators via the <b>Firebase Console</b> (Authentication tab), then add their UID and details to <code>route/config/operators</code> in the Realtime Database.</div>";
+  }
+  document.getElementById("save-routes-msg").textContent="";
+}
+
+function makeRouteItem(p, currentOpUid){
+  var item=document.createElement("div");
+  item.className="route-item";
+  item.draggable=true;
+  item.dataset.propId=p.id;
+  // Left: number badge + name/addr
+  var left=document.createElement("div");left.className="route-item-left";
+  var num=document.createElement("div");num.className="route-item-num";num.textContent=p.order;
+  var txt=document.createElement("div");
+  txt.innerHTML="<div class=\"route-item-name\">"+p.name+"</div><div class=\"route-item-addr\">"+p.addr+"</div>";
+  left.appendChild(num);left.appendChild(txt);
+  // Right: assign dropdown
+  var sel=document.createElement("select");sel.className="assign-select";
+  sel.title="Quick assign";
+  sel.innerHTML="<option value=\"\">Unassigned</option>";
+  Object.entries(OPERATORS).forEach(function(entry){
+    var uid=entry[0],op=entry[1];
+    var opt=document.createElement("option");opt.value=uid;
+    opt.textContent=op.name||op.email||uid;
+    if(currentOpUid===uid)opt.selected=true;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener("change",function(e){
+    e.stopPropagation();
+    _pendingAssignments[p.id]=sel.value;
+    renderRoutesTab();
+  });
+  item.appendChild(left);
+  item.appendChild(sel);
+  // Drag events
+  item.addEventListener("dragstart",function(e){
+    e.dataTransfer.setData("propId",p.id);
+    item.style.opacity="0.5";
+  });
+  item.addEventListener("dragend",function(){
+    item.style.opacity="";
+  });
+  return item;
+}
+
+function setupDropZone(zone, opUid){
+  zone.addEventListener("dragover",function(e){
+    e.preventDefault();
+    zone.classList.add("drag-over");
+  });
+  zone.addEventListener("dragleave",function(){
+    zone.classList.remove("drag-over");
+  });
+  zone.addEventListener("drop",function(e){
+    e.preventDefault();
+    zone.classList.remove("drag-over");
+    var propId=e.dataTransfer.getData("propId");
+    if(propId){
+      _pendingAssignments[propId]=opUid;
+      renderRoutesTab();
+    }
   });
 }
 
-async function addOperator(){
-  var email=document.getElementById("new-op-email").value.trim();
-  var name=document.getElementById("new-op-name").value.trim();
-  var color=document.getElementById("new-op-color").value;
-  var password=document.getElementById("new-op-password").value;
-  var msgEl=document.getElementById("op-form-msg");
-  if(!email||!name){msgEl.textContent="Email and name are required.";msgEl.className="form-msg-err";return;}
-  if(!password||password.length<6){msgEl.textContent="Password must be at least 6 characters.";msgEl.className="form-msg-err";return;}
-  msgEl.textContent="Creating account...";msgEl.className="";
-  var apiKey=firebaseConfig.apiKey;
-  try{
-    var resp=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="+apiKey,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({email:email,password:password,returnSecureToken:false})
-    });
-    var data=await resp.json();
-    if(data.error){
-      var errMsg=data.error.message||"Unknown error";
-      if(errMsg==="EMAIL_EXISTS")errMsg="An account with this email already exists.";
-      if(errMsg==="INVALID_EMAIL")errMsg="Invalid email address.";
-      if(errMsg.startsWith("WEAK_PASSWORD"))errMsg="Password must be at least 6 characters.";
-      msgEl.textContent="Error: "+errMsg;msgEl.className="form-msg-err";return;
+async function saveRoutes(){
+  var msgEl=document.getElementById("save-routes-msg");
+  msgEl.textContent="Saving...";
+  msgEl.style.color="#90caf9";
+  // Apply pending assignments back to PROPERTIES
+  PROPERTIES.forEach(function(p){
+    if(_pendingAssignments.hasOwnProperty(p.id)){
+      p.operator=_pendingAssignments[p.id]||"";
     }
-    var uid=data.localId||("op_"+Date.now());
-    OPERATORS[uid]={email:email,name:name,color:color};
-    await set(ref(db,"route/config/operators"),OPERATORS);
-    msgEl.textContent="✓ Operator "+name+" registered. Login: "+email;msgEl.className="form-msg-ok";
-    document.getElementById("new-op-email").value="";
-    document.getElementById("new-op-name").value="";
-    document.getElementById("new-op-password").value="";
-    populateOperatorSelects();
-    renderOperatorMgmt();
-  }catch(e){
-    msgEl.textContent="Network error creating account. Try again.";msgEl.className="form-msg-err";
-  }
+  });
+  savePropertiesToFirebase();
+  populateOperatorSelects();
+  msgEl.textContent="\u2713 Routes saved and pushed to all operators!";
+  msgEl.style.color="#66bb6a";
+  // Reset pending state so it reflects fresh saved state
+  _pendingAssignments=null;
+  // Re-render
+  setTimeout(function(){
+    renderRoutesTab();
+  },300);
 }
+
 </script>
 </body>
 </html>
