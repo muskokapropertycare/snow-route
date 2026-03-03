@@ -221,7 +221,7 @@ function markerIcon(order,done){
   const bg=done?'#2e7d32':'#c62828';
   return L.divIcon({
     className:'',
-    html:'<div style="background:'+bg+';width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:12px;"+(done?";opacity:0.7":"")+'>'+order+'<\/div>',
+    html:'<div style="background:'+bg+';width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:12px;"+(done?";opacity:0.7":"")+'\x3e'+order+'\x3c/div\x3e',
     iconSize:[30,30],
     iconAnchor:[15,15]
   });
