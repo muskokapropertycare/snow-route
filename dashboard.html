@@ -189,7 +189,7 @@ body{font-family:Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh
       </div>
       <div class="form-row">
         <div class="form-field"><label>Color (for map)</label><input type="color" id="new-op-color" value="#1565c0"/></div>
-        <div class="form-field"></div>
+        <div class="form-field"><label>Login Password *</label><input type="password" id="new-op-password" placeholder="Set operator password" autocomplete="new-password"/></div>
       </div>
       <button class="btn-add btn-green" id="add-op-btn">Register Operator</button>
       <div id="op-form-msg"></div>
@@ -701,18 +701,38 @@ async function addOperator(){
   var email=document.getElementById("new-op-email").value.trim();
   var name=document.getElementById("new-op-name").value.trim();
   var color=document.getElementById("new-op-color").value;
+  var password=document.getElementById("new-op-password").value;
   var msgEl=document.getElementById("op-form-msg");
   if(!email||!name){msgEl.textContent="Email and name are required.";msgEl.className="form-msg-err";return;}
-  // Use email as key (sanitized) since we don't have the UID from Auth here
-  // Operator will be matched by email when they log in
-  var uid="op_"+Date.now();
-  OPERATORS[uid]={email:email,name:name,color:color};
-  await set(ref(db,"route/config/operators"),OPERATORS);
-  msgEl.textContent="Operator "+name+" registered.";msgEl.className="form-msg-ok";
-  document.getElementById("new-op-email").value="";
-  document.getElementById("new-op-name").value="";
-  populateOperatorSelects();
-  renderOperatorMgmt();
+  if(!password||password.length<6){msgEl.textContent="Password must be at least 6 characters.";msgEl.className="form-msg-err";return;}
+  msgEl.textContent="Creating account...";msgEl.className="";
+  var apiKey=firebaseConfig.apiKey;
+  try{
+    var resp=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="+apiKey,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({email:email,password:password,returnSecureToken:false})
+    });
+    var data=await resp.json();
+    if(data.error){
+      var errMsg=data.error.message||"Unknown error";
+      if(errMsg==="EMAIL_EXISTS")errMsg="An account with this email already exists.";
+      if(errMsg==="INVALID_EMAIL")errMsg="Invalid email address.";
+      if(errMsg.startsWith("WEAK_PASSWORD"))errMsg="Password must be at least 6 characters.";
+      msgEl.textContent="Error: "+errMsg;msgEl.className="form-msg-err";return;
+    }
+    var uid=data.localId||("op_"+Date.now());
+    OPERATORS[uid]={email:email,name:name,color:color};
+    await set(ref(db,"route/config/operators"),OPERATORS);
+    msgEl.textContent="✓ Operator "+name+" registered. Login: "+email;msgEl.className="form-msg-ok";
+    document.getElementById("new-op-email").value="";
+    document.getElementById("new-op-name").value="";
+    document.getElementById("new-op-password").value="";
+    populateOperatorSelects();
+    renderOperatorMgmt();
+  }catch(e){
+    msgEl.textContent="Network error creating account. Try again.";msgEl.className="form-msg-err";
+  }
 }
 </script>
 </body>
